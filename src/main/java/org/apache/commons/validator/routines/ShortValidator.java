@@ -59,8 +59,7 @@ import java.util.Locale;
  *       <li>using a specified pattern with a specified <code>Locale</code></li>
  *    </ul>
  *
- * @version $Revision: 1739356 $
- * @since Validator 1.3.0
+ * @since 1.3.0
  */
 public class ShortValidator extends AbstractNumberValidator {
 
@@ -69,7 +68,7 @@ public class ShortValidator extends AbstractNumberValidator {
     private static final ShortValidator VALIDATOR = new ShortValidator();
 
     /**
-     * Return a singleton instance of this validator.
+     * Gets the singleton instance of this validator.
      * @return A singleton instance of the ShortValidator.
      */
     public static ShortValidator getInstance() {
@@ -77,7 +76,7 @@ public class ShortValidator extends AbstractNumberValidator {
     }
 
     /**
-     * Construct a <i>strict</i> instance.
+     * Constructs a <i>strict</i> instance.
      */
     public ShortValidator() {
         this(true, STANDARD_FORMAT);
@@ -99,63 +98,26 @@ public class ShortValidator extends AbstractNumberValidator {
      *           <i>percent</i> number formats (the default).</li>
      *    </ul>
      *
-     * @param strict <code>true</code> if strict
+     * @param strict {@code true} if strict
      *        <code>Format</code> parsing should be used.
      * @param formatType The <code>NumberFormat</code> type to
      *        create for validation, default is STANDARD_FORMAT.
      */
-    public ShortValidator(boolean strict, int formatType) {
+    public ShortValidator(final boolean strict, final int formatType) {
         super(strict, formatType, false);
     }
 
     /**
-     * <p>Validate/convert a <code>Short</code> using the default
-     *    <code>Locale</code>.
+     * Check if the value is within a specified range.
      *
-     * @param value The value validation is being performed on.
-     * @return The parsed <code>Short</code> if valid or <code>null</code>
-     *  if invalid.
+     * @param value The <code>Number</code> value to check.
+     * @param min The minimum value of the range.
+     * @param max The maximum value of the range.
+     * @return {@code true} if the value is within the
+     *         specified range.
      */
-    public Short validate(String value) {
-        return (Short)parse(value, (String)null, (Locale)null);
-    }
-
-    /**
-     * <p>Validate/convert a <code>Short</code> using the
-     *    specified <i>pattern</i>.
-     *
-     * @param value The value validation is being performed on.
-     * @param pattern The pattern used to validate the value against.
-     * @return The parsed <code>Short</code> if valid or <code>null</code> if invalid.
-     */
-    public Short validate(String value, String pattern) {
-        return (Short)parse(value, pattern, (Locale)null);
-    }
-
-    /**
-     * <p>Validate/convert a <code>Short</code> using the
-     *    specified <code>Locale</code>.
-     *
-     * @param value The value validation is being performed on.
-     * @param locale The locale to use for the number format, system default if null.
-     * @return The parsed <code>Short</code> if valid or <code>null</code> if invalid.
-     */
-    public Short validate(String value, Locale locale) {
-        return (Short)parse(value, (String)null, locale);
-    }
-
-    /**
-     * <p>Validate/convert a <code>Short</code> using the
-     *    specified pattern and/ or <code>Locale</code>.
-     *
-     * @param value The value validation is being performed on.
-     * @param pattern The pattern used to validate the value against, or the
-     *        default for the <code>Locale</code> if <code>null</code>.
-     * @param locale The locale to use for the date format, system default if null.
-     * @return The parsed <code>Short</code> if valid or <code>null</code> if invalid.
-     */
-    public Short validate(String value, String pattern, Locale locale) {
-        return (Short)parse(value, pattern, locale);
+    public boolean isInRange(final short value, final short min, final short max) {
+        return value >= min && value <= max;
     }
 
     /**
@@ -164,48 +126,23 @@ public class ShortValidator extends AbstractNumberValidator {
      * @param value The <code>Number</code> value to check.
      * @param min The minimum value of the range.
      * @param max The maximum value of the range.
-     * @return <code>true</code> if the value is within the
+     * @return {@code true} if the value is within the
      *         specified range.
      */
-    public boolean isInRange(short value, short min, short max) {
-        return (value >= min && value <= max);
-    }
-
-    /**
-     * Check if the value is within a specified range.
-     *
-     * @param value The <code>Number</code> value to check.
-     * @param min The minimum value of the range.
-     * @param max The maximum value of the range.
-     * @return <code>true</code> if the value is within the
-     *         specified range.
-     */
-    public boolean isInRange(Short value, short min, short max) {
+    public boolean isInRange(final Short value, final short min, final short max) {
         return isInRange(value.shortValue(), min, max);
     }
 
     /**
-     * Check if the value is greater than or equal to a minimum.
+     * Check if the value is less than or equal to a maximum.
      *
      * @param value The value validation is being performed on.
-     * @param min The minimum value.
-     * @return <code>true</code> if the value is greater than
-     *         or equal to the minimum.
+     * @param max The maximum value.
+     * @return {@code true} if the value is less than
+     *         or equal to the maximum.
      */
-    public boolean minValue(short value, short min) {
-        return (value >= min);
-    }
-
-    /**
-     * Check if the value is greater than or equal to a minimum.
-     *
-     * @param value The value validation is being performed on.
-     * @param min The minimum value.
-     * @return <code>true</code> if the value is greater than
-     *         or equal to the minimum.
-     */
-    public boolean minValue(Short value, short min) {
-        return minValue(value.shortValue(), min);
+    public boolean maxValue(final short value, final short max) {
+        return value <= max;
     }
 
     /**
@@ -213,23 +150,35 @@ public class ShortValidator extends AbstractNumberValidator {
      *
      * @param value The value validation is being performed on.
      * @param max The maximum value.
-     * @return <code>true</code> if the value is less than
+     * @return {@code true} if the value is less than
      *         or equal to the maximum.
      */
-    public boolean maxValue(short value, short max) {
-        return (value <= max);
-    }
-
-    /**
-     * Check if the value is less than or equal to a maximum.
-     *
-     * @param value The value validation is being performed on.
-     * @param max The maximum value.
-     * @return <code>true</code> if the value is less than
-     *         or equal to the maximum.
-     */
-    public boolean maxValue(Short value, short max) {
+    public boolean maxValue(final Short value, final short max) {
         return maxValue(value.shortValue(), max);
+    }
+
+    /**
+     * Check if the value is greater than or equal to a minimum.
+     *
+     * @param value The value validation is being performed on.
+     * @param min The minimum value.
+     * @return {@code true} if the value is greater than
+     *         or equal to the minimum.
+     */
+    public boolean minValue(final short value, final short min) {
+        return value >= min;
+    }
+
+    /**
+     * Check if the value is greater than or equal to a minimum.
+     *
+     * @param value The value validation is being performed on.
+     * @param min The minimum value.
+     * @return {@code true} if the value is greater than
+     *         or equal to the minimum.
+     */
+    public boolean minValue(final Short value, final short min) {
+        return minValue(value.shortValue(), min);
     }
 
     /**
@@ -239,17 +188,67 @@ public class ShortValidator extends AbstractNumberValidator {
      * @param value The parsed <code>Number</code> object created.
      * @param formatter The Format used to parse the value with.
      * @return The parsed <code>Number</code> converted to a
-     *   <code>Short</code> if valid or <code>null</code> if invalid.
+     *   <code>Short</code> if valid or {@code null} if invalid.
      */
     @Override
-    protected Object processParsedValue(Object value, Format formatter) {
+    protected Object processParsedValue(final Object value, final Format formatter) {
 
-        long longValue = ((Number)value).longValue();
+        final long longValue = ((Number) value).longValue();
 
         if (longValue < Short.MIN_VALUE ||
             longValue > Short.MAX_VALUE) {
             return null;
         }
-        return Short.valueOf((short)longValue);
+        return Short.valueOf((short) longValue);
+    }
+
+    /**
+     * <p>Validate/convert a <code>Short</code> using the default
+     *    <code>Locale</code>.
+     *
+     * @param value The value validation is being performed on.
+     * @return The parsed <code>Short</code> if valid or {@code null}
+     *  if invalid.
+     */
+    public Short validate(final String value) {
+        return (Short) parse(value, (String) null, (Locale) null);
+    }
+
+    /**
+     * <p>Validate/convert a <code>Short</code> using the
+     *    specified <code>Locale</code>.
+     *
+     * @param value The value validation is being performed on.
+     * @param locale The locale to use for the number format, system default if null.
+     * @return The parsed <code>Short</code> if valid or {@code null} if invalid.
+     */
+    public Short validate(final String value, final Locale locale) {
+        return (Short) parse(value, (String) null, locale);
+    }
+
+    /**
+     * <p>Validate/convert a <code>Short</code> using the
+     *    specified <i>pattern</i>.
+     *
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against.
+     * @return The parsed <code>Short</code> if valid or {@code null} if invalid.
+     */
+    public Short validate(final String value, final String pattern) {
+        return (Short) parse(value, pattern, (Locale) null);
+    }
+
+    /**
+     * <p>Validate/convert a <code>Short</code> using the
+     *    specified pattern and/ or <code>Locale</code>.
+     *
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against, or the
+     *        default for the <code>Locale</code> if {@code null}.
+     * @param locale The locale to use for the date format, system default if null.
+     * @return The parsed <code>Short</code> if valid or {@code null} if invalid.
+     */
+    public Short validate(final String value, final String pattern, final Locale locale) {
+        return (Short) parse(value, pattern, locale);
     }
 }

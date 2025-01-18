@@ -23,8 +23,6 @@ import java.io.Serializable;
  * and a pluggable validator instead of using the default message
  * stored in the <code>ValidatorAction</code> (aka pluggable validator).
  * Instances of this class are configured with a &lt;msg&gt; xml element.
- *
- * @version $Revision: 1739356 $
  */
 //TODO mutable non-private fields
 public class Msg implements Cloneable, Serializable {
@@ -34,60 +32,49 @@ public class Msg implements Cloneable, Serializable {
     /**
      * The resource bundle name that this Msg's <code>key</code> should be
      * resolved in (optional).
-     * @since Validator 1.1
+     * @since 1.1
      */
-    protected String bundle = null;
+    protected String bundle;
 
     /**
      * The key or value of the argument.
      */
-    protected String key = null;
+    protected String key;
 
     /**
      * The name dependency that this argument goes with (optional).
      */
-    protected String name = null;
+    protected String name;
 
     /**
      * Whether or not the key is a message resource (optional).  Defaults to
      * true.  If it is 'true', the value will try to be resolved as a message
      * resource.
-     * @since Validator 1.1.4
+     * @since 1.1.4
      */
     protected boolean resource = true;
 
     /**
+     * Creates and returns a copy of this object.
+     * @return A copy of the Msg.
+     */
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+
+        } catch (final CloneNotSupportedException e) {
+            throw new UnsupportedOperationException(e.toString(), e);
+        }
+    }
+
+    /**
      * Returns the resource bundle name.
      * @return The bundle name.
-     * @since Validator 1.1
+     * @since 1.1
      */
     public String getBundle() {
         return this.bundle;
-    }
-
-    /**
-     * Sets the resource bundle name.
-     * @param bundle The new bundle name.
-     * @since Validator 1.1
-     */
-    public void setBundle(String bundle) {
-        this.bundle = bundle;
-    }
-
-    /**
-     * Gets the name of the dependency.
-     * @return The dependency name.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name of the dependency.
-     * @param name The dependency name.
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -99,43 +86,54 @@ public class Msg implements Cloneable, Serializable {
     }
 
     /**
-     * Sets the key/value.
-     * @param key The message key/value.
+     * Gets the name of the dependency.
+     * @return The dependency name.
      */
-    public void setKey(String key) {
-        this.key = key;
+    public String getName() {
+        return name;
     }
 
     /**
      * Tests whether or not the key is a resource key or literal value.
-     * @return <code>true</code> if key is a resource key.
-     * @since Validator 1.1.4
+     * @return {@code true} if key is a resource key.
+     * @since 1.1.4
      */
     public boolean isResource() {
         return this.resource;
     }
 
     /**
-     * Sets whether or not the key is a resource.
-     * @param resource If true indicates the key is a resource.
-     * @since Validator 1.1.4
+     * Sets the resource bundle name.
+     * @param bundle The new bundle name.
+     * @since 1.1
      */
-    public void setResource(boolean resource) {
-        this.resource = resource;
+    public void setBundle(final String bundle) {
+        this.bundle = bundle;
     }
 
     /**
-     * Creates and returns a copy of this object.
-     * @return A copy of the Msg.
+     * Sets the key/value.
+     * @param key The message key/value.
      */
-    @Override
-    public Object clone() {
-        try {
-            return super.clone();
+    public void setKey(final String key) {
+        this.key = key;
+    }
 
-        } catch(CloneNotSupportedException e) {
-            throw new RuntimeException(e.toString());
-        }
+    /**
+     * Sets the name of the dependency.
+     * @param name The dependency name.
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    /**
+     * Sets whether or not the key is a resource.
+     * @param resource If true indicates the key is a resource.
+     * @since 1.1.4
+     */
+    public void setResource(final boolean resource) {
+        this.resource = resource;
     }
 
     /**
@@ -144,7 +142,7 @@ public class Msg implements Cloneable, Serializable {
      */
     @Override
     public String toString() {
-        StringBuilder results = new StringBuilder();
+        final StringBuilder results = new StringBuilder();
 
         results.append("Msg: name=");
         results.append(name);

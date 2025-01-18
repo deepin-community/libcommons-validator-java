@@ -14,19 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package org.apache.commons.validator;
+package org.apache.commons.validator;
 
 /**
  * Groups tests and expected results.
- *
- * @version $Revision: 1713567 $
  */
- public class ResultPair {
-      public final String item;
-      public final boolean valid;
+public class ResultPair {
+    public final String item;
+    public final boolean valid;
 
-      public ResultPair(String item, boolean valid) {
-         this.item = item;
-         this.valid = valid;  //Whether the individual part of url is valid.
-      }
-   }
+    public ResultPair(final String item, final boolean valid) {
+        this.item = item;
+        this.valid = valid; // Whether the individual part of URL is valid.
+    }
+}

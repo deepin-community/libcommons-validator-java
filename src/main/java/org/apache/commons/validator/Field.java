@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,7 +41,6 @@ import org.apache.commons.validator.util.ValidatorUtils;
  * release.
  * </p>
  *
- * @version $Revision: 1739361 $
  * @see org.apache.commons.validator.Form
  */
 // TODO mutable non-private fields
@@ -80,44 +78,44 @@ public class Field implements Cloneable, Serializable {
     /**
      * The Field's property name.
      */
-    protected String property = null;
+    protected String property;
 
     /**
      * The Field's indexed property name.
      */
-    protected String indexedProperty = null;
+    protected String indexedProperty;
 
     /**
      * The Field's indexed list property name.
      */
-    protected String indexedListProperty = null;
+    protected String indexedListProperty;
 
     /**
      * The Field's unique key.
      */
-    protected String key = null;
+    protected String key;
 
     /**
      * A comma separated list of validator's this field depends on.
      */
-    protected String depends = null;
+    protected String depends;
 
     /**
      * The Page Number
      */
-    protected int page = 0;
+    protected int page;
 
     /**
      * The flag that indicates whether scripting should be generated
      * by the client for client-side validation.
-     * @since Validator 1.4
+     * @since 1.4
      */
     protected boolean clientValidation = true;
 
     /**
      * The order of the Field in the Form.
      */
-    protected int fieldOrder = 0;
+    protected int fieldOrder;
 
     /**
      * Internal representation of this.depends String as a List.  This List
@@ -125,7 +123,7 @@ public class Field implements Cloneable, Serializable {
      * synchronized so a call to setDepends() (which clears the List) won't
      * interfere with a call to isDependency().
      */
-    private final List<String> dependencyList = Collections.synchronizedList(new ArrayList<String>());
+    private final List<String> dependencyList = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * @deprecated Subclasses should use getVarMap() instead.
@@ -143,194 +141,19 @@ public class Field implements Cloneable, Serializable {
      * Holds Maps of arguments.  args[0] returns the Map for the first
      * replacement argument.  Start with a 0 length array so that it will
      * only grow to the size of the highest argument position.
-     * @since Validator 1.1
+     * @since 1.1
      */
     @SuppressWarnings("unchecked") // cannot instantiate generic array, so have to assume this is OK
     protected Map<String, Arg>[] args = new Map[0];
 
     /**
-     * Gets the page value that the Field is associated with for
-     * validation.
-     * @return The page number.
-     */
-    public int getPage() {
-        return this.page;
-    }
-
-    /**
-     * Sets the page value that the Field is associated with for
-     * validation.
-     * @param page The page number.
-     */
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    /**
-     * Gets the position of the <code>Field</code> in the validation list.
-     * @return The field position.
-     */
-    public int getFieldOrder() {
-        return this.fieldOrder;
-    }
-
-    /**
-     * Sets the position of the <code>Field</code> in the validation list.
-     * @param fieldOrder The field position.
-     */
-    public void setFieldOrder(int fieldOrder) {
-        this.fieldOrder = fieldOrder;
-    }
-
-    /**
-     * Gets the property name of the field.
-     * @return The field's property name.
-     */
-    public String getProperty() {
-        return this.property;
-    }
-
-    /**
-     * Sets the property name of the field.
-     * @param property The field's property name.
-     */
-    public void setProperty(String property) {
-        this.property = property;
-    }
-
-    /**
-     * Gets the indexed property name of the field.  This
-     * is the method name that can take an <code>int</code> as
-     * a parameter for indexed property value retrieval.
-     * @return The field's indexed property name.
-     */
-    public String getIndexedProperty() {
-        return this.indexedProperty;
-    }
-
-    /**
-     * Sets the indexed property name of the field.
-     * @param indexedProperty The field's indexed property name.
-     */
-    public void setIndexedProperty(String indexedProperty) {
-        this.indexedProperty = indexedProperty;
-    }
-
-    /**
-     * Gets the indexed property name of the field.  This
-     * is the method name that will return an array or a
-     * <code>Collection</code> used to retrieve the
-     * list and then loop through the list performing the specified
-     * validations.
-     * @return The field's indexed List property name.
-     */
-    public String getIndexedListProperty() {
-        return this.indexedListProperty;
-    }
-
-    /**
-     * Sets the indexed property name of the field.
-     * @param indexedListProperty The field's indexed List property name.
-     */
-    public void setIndexedListProperty(String indexedListProperty) {
-        this.indexedListProperty = indexedListProperty;
-    }
-
-    /**
-     * Gets the validation rules for this field as a comma separated list.
-     * @return A comma separated list of validator names.
-     */
-    public String getDepends() {
-        return this.depends;
-    }
-
-    /**
-     * Sets the validation rules for this field as a comma separated list.
-     * @param depends A comma separated list of validator names.
-     */
-    public void setDepends(String depends) {
-        this.depends = depends;
-
-        this.dependencyList.clear();
-
-        StringTokenizer st = new StringTokenizer(depends, ",");
-        while (st.hasMoreTokens()) {
-            String depend = st.nextToken().trim();
-
-            if (depend != null && depend.length() > 0) {
-                this.dependencyList.add(depend);
-            }
-        }
-    }
-
-    /**
-     * Add a <code>Msg</code> to the <code>Field</code>.
-     * @param msg A validation message.
-     */
-    public void addMsg(Msg msg) {
-        getMsgMap().put(msg.getName(), msg);
-    }
-
-    /**
-     * Retrieve a message value.
-     * @param key Validation key.
-     * @return A validation message for a specified validator.
-     */
-    public String getMsg(String key) {
-        Msg msg = getMessage(key);
-        return (msg == null) ? null : msg.getKey();
-    }
-
-    /**
-     * Retrieve a message object.
-     * @since Validator 1.1.4
-     * @param key Validation key.
-     * @return A validation message for a specified validator.
-     */
-    public Msg getMessage(String key) {
-        return getMsgMap().get(key);
-    }
-
-    /**
-     * The <code>Field</code>'s messages are returned as an
-     * unmodifiable <code>Map</code>.
-     * @since Validator 1.1.4
-     * @return Map of validation messages for the field.
-     */
-    public Map<String, Msg> getMessages() {
-        return Collections.unmodifiableMap(getMsgMap());
-    }
-
-    /**
-     * Determines whether client-side scripting should be generated
-     * for this field. The default is <code>true</code>
-     * @return <code>true</code> for scripting; otherwise false
-     * @see #setClientValidation(boolean)
-     * @since Validator 1.4
-     */
-    public boolean isClientValidation() {
-        return this.clientValidation;
-    }
-
-    /**
-     * Sets the flag that determines whether client-side scripting should
-     * be generated for this field.
-     * @param clientValidation the scripting flag
-     * @see #isClientValidation()
-     * @since Validator 1.4
-     */
-    public void setClientValidation(boolean clientValidation) {
-        this.clientValidation = clientValidation;
-    }
-
-    /**
      * Add an <code>Arg</code> to the replacement argument list.
-     * @since Validator 1.1
+     * @since 1.1
      * @param arg Validation message's argument.
      */
-    public void addArg(Arg arg) {
+    public void addArg(final Arg arg) {
         // TODO this first if check can go away after arg0, etc. are removed from dtd
-        if (arg == null || arg.getKey() == null || arg.getKey().length() == 0) {
+        if (arg == null || arg.getKey() == null || arg.getKey().isEmpty()) {
             return;
         }
 
@@ -339,7 +162,7 @@ public class Field implements Cloneable, Serializable {
 
         Map<String, Arg> argMap = this.args[arg.getPosition()];
         if (argMap == null) {
-            argMap = new HashMap<String, Arg>();
+            argMap = new HashMap<>();
             this.args[arg.getPosition()] = argMap;
         }
 
@@ -352,11 +175,70 @@ public class Field implements Cloneable, Serializable {
     }
 
     /**
+     * Add a <code>Msg</code> to the <code>Field</code>.
+     * @param msg A validation message.
+     */
+    public void addMsg(final Msg msg) {
+        getMsgMap().put(msg.getName(), msg);
+    }
+
+    /**
+     * Add a <code>Var</code>, based on the values passed in, to the
+     * <code>Field</code>.
+     * @param name Name of the validation.
+     * @param value The Argument's value.
+     * @param jsType The JavaScript type.
+     */
+    public void addVar(final String name, final String value, final String jsType) {
+        this.addVar(new Var(name, value, jsType));
+    }
+
+    /**
+     * Add a <code>Var</code> to the <code>Field</code>.
+     * @param v The Validator Argument.
+     */
+    public void addVar(final Var v) {
+        this.getVarMap().put(v.getName(), v);
+    }
+
+    /**
+     * Creates and returns a copy of this object.
+     * @return A copy of the Field.
+     */
+    @Override
+    public Object clone() {
+        Field field = null;
+        try {
+            field = (Field) super.clone();
+        } catch (final CloneNotSupportedException e) {
+            throw new UnsupportedOperationException(e.toString(), e);
+        }
+
+        @SuppressWarnings("unchecked") // empty array always OK; cannot check this at compile time
+        final Map<String, Arg>[] tempMap = new Map[this.args.length];
+        field.args = tempMap;
+        for (int i = 0; i < this.args.length; i++) {
+            if (this.args[i] == null) {
+                continue;
+            }
+
+            final Map<String, Arg> argMap = new HashMap<>(this.args[i]);
+            argMap.forEach((validatorName, arg) -> argMap.put(validatorName, (Arg) arg.clone()));
+            field.args[i] = argMap;
+        }
+
+        field.hVars = ValidatorUtils.copyFastHashMap(hVars);
+        field.hMsgs = ValidatorUtils.copyFastHashMap(hMsgs);
+
+        return field;
+    }
+
+    /**
      * Calculate the position of the Arg
      */
-    private void determineArgPosition(Arg arg) {
+    private void determineArgPosition(final Arg arg) {
 
-        int position = arg.getPosition();
+        final int position = arg.getPosition();
 
         // position has been explicity set
         if (position >= 0) {
@@ -371,11 +253,11 @@ public class Field implements Cloneable, Serializable {
 
         // determine the position of the last argument with
         // the same name or the last default argument
-        String key = arg.getName() == null ? DEFAULT_ARG : arg.getName();
+        final String keyName = arg.getName() == null ? DEFAULT_ARG : arg.getName();
         int lastPosition = -1;
-        int lastDefault  = -1;
+        int lastDefault = -1;
         for (int i = 0; i < args.length; i++) {
-            if (args[i] != null && args[i].containsKey(key)) {
+            if (args[i] != null && args[i].containsKey(keyName)) {
                 lastPosition = i;
             }
             if (args[i] != null && args[i].containsKey(DEFAULT_ARG)) {
@@ -398,9 +280,10 @@ public class Field implements Cloneable, Serializable {
      * @param arg Determine if the args array is long enough to store this arg's
      * position.
      */
-    private void ensureArgsCapacity(Arg arg) {
+    private void ensureArgsCapacity(final Arg arg) {
         if (arg.getPosition() >= this.args.length) {
             @SuppressWarnings("unchecked") // cannot check this at compile time, but it is OK
+            final
             Map<String, Arg>[] newArgs = new Map[arg.getPosition() + 1];
             System.arraycopy(this.args, 0, newArgs, 0, this.args.length);
             this.args = newArgs;
@@ -408,39 +291,50 @@ public class Field implements Cloneable, Serializable {
     }
 
     /**
+     * Generate correct <code>key</code> value.
+     */
+    public void generateKey() {
+        if (this.isIndexed()) {
+            this.key = this.indexedListProperty + TOKEN_INDEXED + "." + this.property;
+        } else {
+            this.key = this.property;
+        }
+    }
+
+    /**
      * Gets the default <code>Arg</code> object at the given position.
      * @param position Validation message argument's position.
      * @return The default Arg or null if not found.
-     * @since Validator 1.1
+     * @since 1.1
      */
-    public Arg getArg(int position) {
+    public Arg getArg(final int position) {
         return this.getArg(DEFAULT_ARG, position);
     }
 
     /**
      * Gets the <code>Arg</code> object at the given position.  If the key
-     * finds a <code>null</code> value then the default value will be
+     * finds a {@code null} value then the default value will be
      * retrieved.
      * @param key The name the Arg is stored under.  If not found, the default
      * Arg for the given position (if any) will be retrieved.
      * @param position The Arg number to find.
      * @return The Arg with the given name and position or null if not found.
-     * @since Validator 1.1
+     * @since 1.1
      */
-    public Arg getArg(String key, int position) {
-        if ((position >= this.args.length) || (this.args[position] == null)) {
+    public Arg getArg(final String key, final int position) {
+        if (position >= this.args.length || this.args[position] == null) {
             return null;
         }
 
-        Arg arg = args[position].get(key);
+        final Arg arg = args[position].get(key);
 
         // Didn't find default arg so exit, otherwise we would get into
         // infinite recursion
-        if ((arg == null) && key.equals(DEFAULT_ARG)) {
+        if (arg == null && key.equals(DEFAULT_ARG)) {
             return null;
         }
 
-        return (arg == null) ? this.getArg(position) : arg;
+        return arg == null ? this.getArg(position) : arg;
     }
 
     /**
@@ -448,70 +342,122 @@ public class Field implements Cloneable, Serializable {
      * @param key The validator's args to retrieve.
      * @return An Arg[] sorted by the Args' positions (i.e. the Arg at index 0
      * has a position of 0).
-     * @since Validator 1.1.1
+     * @since 1.1.1
      */
-    public Arg[] getArgs(String key){
-        Arg[] args = new Arg[this.args.length];
+    public Arg[] getArgs(final String key) {
+        final Arg[] argList = new Arg[this.args.length];
 
         for (int i = 0; i < this.args.length; i++) {
-            args[i] = this.getArg(key, i);
+            argList[i] = this.getArg(key, i);
         }
 
-        return args;
+        return argList;
     }
 
     /**
-     * Add a <code>Var</code> to the <code>Field</code>.
-     * @param v The Validator Argument.
+     * Gets an unmodifiable <code>List</code> of the dependencies in the same
+     * order they were defined in parameter passed to the setDepends() method.
+     * @return A list of the Field's dependancies.
      */
-    public void addVar(Var v) {
-        this.getVarMap().put(v.getName(), v);
+    public List<String> getDependencyList() {
+        return Collections.unmodifiableList(this.dependencyList);
     }
 
     /**
-     * Add a <code>Var</code>, based on the values passed in, to the
-     * <code>Field</code>.
-     * @param name Name of the validation.
-     * @param value The Argument's value.
-     * @param jsType The Javascript type.
+     * Gets the validation rules for this field as a comma separated list.
+     * @return A comma separated list of validator names.
      */
-    public void addVar(String name, String value, String jsType) {
-        this.addVar(new Var(name, value, jsType));
+    public String getDepends() {
+        return this.depends;
     }
 
     /**
-     * Retrieve a variable.
-     * @param mainKey The Variable's key
-     * @return the Variable
+     * Gets the position of the <code>Field</code> in the validation list.
+     * @return The field position.
      */
-    public Var getVar(String mainKey) {
-        return getVarMap().get(mainKey);
+    public int getFieldOrder() {
+        return this.fieldOrder;
     }
 
     /**
-     * Retrieve a variable's value.
-     * @param mainKey The Variable's key
-     * @return the Variable's value
+     * Gets the indexed property name of the field.  This
+     * is the method name that will return an array or a
+     * <code>Collection</code> used to retrieve the
+     * list and then loop through the list performing the specified
+     * validations.
+     * @return The field's indexed List property name.
      */
-    public String getVarValue(String mainKey) {
-        String value = null;
+    public String getIndexedListProperty() {
+        return this.indexedListProperty;
+    }
 
-        Object o = getVarMap().get(mainKey);
-        if (o != null && o instanceof Var) {
-            Var v = (Var) o;
-            value = v.getValue();
+    /**
+     * Gets the indexed property name of the field.  This
+     * is the method name that can take an <code>int</code> as
+     * a parameter for indexed property value retrieval.
+     * @return The field's indexed property name.
+     */
+    public String getIndexedProperty() {
+        return this.indexedProperty;
+    }
+
+    /**
+     * Returns an indexed property from the object we're validating.
+     *
+     * @param bean The bean to extract the indexed values from.
+     * @throws ValidatorException If there's an error looking up the property
+     * or, the property found is not indexed.
+     */
+    Object[] getIndexedProperty(final Object bean) throws ValidatorException {
+        Object indexProp = null;
+
+        try {
+            indexProp = PropertyUtils.getProperty(bean, this.getIndexedListProperty());
+
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new ValidatorException(e.getMessage());
         }
 
-        return value;
+        if (indexProp instanceof Collection) {
+            return ((Collection<?>) indexProp).toArray();
+
+        }
+        if (indexProp.getClass().isArray()) {
+            return (Object[]) indexProp;
+
+        }
+        throw new ValidatorException(this.getKey() + " is not indexed");
+
     }
 
     /**
-     * The <code>Field</code>'s variables are returned as an
-     * unmodifiable <code>Map</code>.
-     * @return the Map of Variable's for a Field.
+     * Returns the size of an indexed property from the object we're validating.
+     *
+     * @param bean The bean to extract the indexed values from.
+     * @throws ValidatorException If there's an error looking up the property
+     * or, the property found is not indexed.
      */
-    public Map<String, Var> getVars() {
-        return Collections.unmodifiableMap(getVarMap());
+    private int getIndexedPropertySize(final Object bean) throws ValidatorException {
+        Object indexProp = null;
+
+        try {
+            indexProp = PropertyUtils.getProperty(bean, this.getIndexedListProperty());
+
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new ValidatorException(e.getMessage());
+        }
+
+        if (indexProp == null) {
+            return 0;
+        }
+        if (indexProp instanceof Collection) {
+            return ((Collection<?>) indexProp).size();
+        }
+        if (indexProp.getClass().isArray()) {
+            return ((Object[]) indexProp).length;
+        }
+        throw new ValidatorException(this.getKey() + " is not indexed");
+
     }
 
     /**
@@ -527,51 +473,162 @@ public class Field implements Cloneable, Serializable {
     }
 
     /**
-     * Sets a unique key for the field.  This can be used to change
-     * the key temporarily to have a unique key for an indexed field.
-     * @param key a unique key for the field
+     * Retrieve a message object.
+     * @since 1.1.4
+     * @param key Validation key.
+     * @return A validation message for a specified validator.
      */
-    public void setKey(String key) {
-        this.key = key;
+    public Msg getMessage(final String key) {
+        return getMsgMap().get(key);
+    }
+
+    /**
+     * The <code>Field</code>'s messages are returned as an
+     * unmodifiable <code>Map</code>.
+     * @since 1.1.4
+     * @return Map of validation messages for the field.
+     */
+    public Map<String, Msg> getMessages() {
+        return Collections.unmodifiableMap(getMsgMap());
+    }
+
+    /**
+     * Retrieve a message value.
+     * @param key Validation key.
+     * @return A validation message for a specified validator.
+     */
+    public String getMsg(final String key) {
+        final Msg msg = getMessage(key);
+        return msg == null ? null : msg.getKey();
+    }
+
+    /**
+     * Returns a Map of String Msg names to Msg objects.
+     * @since 1.2.0
+     * @return A Map of the Field's messages.
+     */
+    @SuppressWarnings("unchecked") // FastHashMap does not support generics
+    protected Map<String, Msg> getMsgMap() {
+        return hMsgs;
+    }
+
+    /**
+     * Gets the page value that the Field is associated with for
+     * validation.
+     * @return The page number.
+     */
+    public int getPage() {
+        return this.page;
+    }
+
+    /**
+     * Gets the property name of the field.
+     * @return The field's property name.
+     */
+    public String getProperty() {
+        return this.property;
+    }
+
+    /**
+     * Retrieve a variable.
+     * @param mainKey The Variable's key
+     * @return the Variable
+     */
+    public Var getVar(final String mainKey) {
+        return getVarMap().get(mainKey);
+    }
+
+    /**
+     * Returns a Map of String Var names to Var objects.
+     * @since 1.2.0
+     * @return A Map of the Field's variables.
+     */
+    @SuppressWarnings("unchecked") // FastHashMap does not support generics
+    protected Map<String, Var> getVarMap() {
+        return hVars;
+    }
+
+    /**
+     * The <code>Field</code>'s variables are returned as an
+     * unmodifiable <code>Map</code>.
+     * @return the Map of Variable's for a Field.
+     */
+    public Map<String, Var> getVars() {
+        return Collections.unmodifiableMap(getVarMap());
+    }
+
+    /**
+     * Retrieve a variable's value.
+     * @param mainKey The Variable's key
+     * @return the Variable's value
+     */
+    public String getVarValue(final String mainKey) {
+        String value = null;
+
+        final Var v = getVarMap().get(mainKey);
+        if (v != null) {
+            value = v.getValue();
+        }
+
+        return value;
+    }
+
+    /**
+     * Called when a validator name is used in a depends clause but there is
+     * no know ValidatorAction configured for that name.
+     * @param name The name of the validator in the depends list.
+     * @throws ValidatorException
+     */
+    private void handleMissingAction(final String name) throws ValidatorException {
+        throw new ValidatorException("No ValidatorAction named " + name
+                + " found for field " + this.getProperty());
+    }
+
+    /**
+     * Determines whether client-side scripting should be generated
+     * for this field. The default is {@code true}
+     * @return {@code true} for scripting; otherwise false
+     * @see #setClientValidation(boolean)
+     * @since 1.4
+     */
+    public boolean isClientValidation() {
+        return this.clientValidation;
+    }
+
+    /**
+     * Checks if the validator is listed as a dependency.
+     * @param validatorName Name of the validator to check.
+     * @return Whether the field is dependant on a validator.
+     */
+    public boolean isDependency(final String validatorName) {
+        return this.dependencyList.contains(validatorName);
     }
 
     /**
      * If there is a value specified for the indexedProperty field then
-     * <code>true</code> will be returned.  Otherwise it will be
-     * <code>false</code>.
+     * {@code true} will be returned.  Otherwise it will be
+     * {@code false}.
      * @return Whether the Field is indexed.
      */
     public boolean isIndexed() {
-        return ((indexedListProperty != null && indexedListProperty.length() > 0));
-    }
-
-    /**
-     * Generate correct <code>key</code> value.
-     */
-    public void generateKey() {
-        if (this.isIndexed()) {
-            this.key = this.indexedListProperty + TOKEN_INDEXED + "." + this.property;
-        } else {
-            this.key = this.property;
-        }
+        return indexedListProperty != null && !indexedListProperty.isEmpty();
     }
 
     /**
      * Replace constants with values in fields and process the depends field
      * to create the dependency <code>Map</code>.
      */
-    void process(Map<String, String> globalConstants, Map<String, String> constants) {
+    void process(final Map<String, String> globalConstants, final Map<String, String> constants) {
         this.hMsgs.setFast(false);
         this.hVars.setFast(true);
 
         this.generateKey();
 
         // Process FormSet Constants
-        for (Iterator<Entry<String, String>> i = constants.entrySet().iterator(); i.hasNext();) {
-            Entry<String, String> entry = i.next();
-            String key = entry.getKey();
-            String key2 = TOKEN_START + key + TOKEN_END;
-            String replaceValue = entry.getValue();
+        for (final Entry<String, String> entry : constants.entrySet()) {
+            final String key1 = entry.getKey();
+            final String key2 = TOKEN_START + key1 + TOKEN_END;
+            final String replaceValue = entry.getValue();
 
             property = ValidatorUtils.replace(property, key2, replaceValue);
 
@@ -581,11 +638,10 @@ public class Field implements Cloneable, Serializable {
         }
 
         // Process Global Constants
-        for (Iterator<Entry<String, String>> i = globalConstants.entrySet().iterator(); i.hasNext();) {
-            Entry<String, String> entry = i.next();
-            String key = entry.getKey();
-            String key2 = TOKEN_START + key + TOKEN_END;
-            String replaceValue = entry.getValue();
+        for (final Entry<String, String> entry : globalConstants.entrySet()) {
+            final String key1 = entry.getKey();
+            final String key2 = TOKEN_START + key1 + TOKEN_END;
+            final String replaceValue = entry.getValue();
 
             property = ValidatorUtils.replace(property, key2, replaceValue);
 
@@ -595,11 +651,10 @@ public class Field implements Cloneable, Serializable {
         }
 
         // Process Var Constant Replacement
-        for (Iterator<String> i = getVarMap().keySet().iterator(); i.hasNext();) {
-            String key = i.next();
-            String key2 = TOKEN_START + TOKEN_VAR + key + TOKEN_END;
-            Var var = this.getVar(key);
-            String replaceValue = var.getValue();
+        for (final String key1 : getVarMap().keySet()) {
+            final String key2 = TOKEN_START + TOKEN_VAR + key1 + TOKEN_END;
+            final Var var = this.getVar(key1);
+            final String replaceValue = var.getValue();
 
             this.processMessageComponents(key2, replaceValue);
         }
@@ -608,28 +663,30 @@ public class Field implements Cloneable, Serializable {
     }
 
     /**
-     * Replace the vars value with the key/value pairs passed in.
+     * Replace the arg <code>Collection</code> key value with the key/value
+     * pairs passed in.
      */
-    private void processVars(String key, String replaceValue) {
-        Iterator<String> i = getVarMap().keySet().iterator();
-        while (i.hasNext()) {
-            String varKey = i.next();
-            Var var = this.getVar(varKey);
-
-            var.setValue(ValidatorUtils.replace(var.getValue(), key, replaceValue));
+    private void processArg(final String key, final String replaceValue) {
+        for (final Map<String, Arg> argMap : this.args) {
+            if (argMap == null) {
+                continue;
+            }
+            for (final Arg arg : argMap.values()) {
+                if (arg != null) {
+                    arg.setKey(ValidatorUtils.replace(arg.getKey(), key, replaceValue));
+                }
+            }
         }
-
     }
 
     /**
      * Replace the args key value with the key/value pairs passed in.
      */
-    private void processMessageComponents(String key, String replaceValue) {
-        String varKey = TOKEN_START + TOKEN_VAR;
+    private void processMessageComponents(final String key, final String replaceValue) {
+        final String varKey = TOKEN_START + TOKEN_VAR;
         // Process Messages
         if (key != null && !key.startsWith(varKey)) {
-            for (Iterator<Msg> i = getMsgMap().values().iterator(); i.hasNext();) {
-                Msg msg = i.next();
+            for (final Msg msg : getMsgMap().values()) {
                 msg.setKey(ValidatorUtils.replace(msg.getKey(), key, replaceValue));
             }
         }
@@ -638,206 +695,14 @@ public class Field implements Cloneable, Serializable {
     }
 
     /**
-     * Replace the arg <code>Collection</code> key value with the key/value
-     * pairs passed in.
+     * Replace the vars value with the key/value pairs passed in.
      */
-    private void processArg(String key, String replaceValue) {
-        for (int i = 0; i < this.args.length; i++) {
-
-            Map<String, Arg> argMap = this.args[i];
-            if (argMap == null) {
-                continue;
-            }
-
-            Iterator<Arg> iter = argMap.values().iterator();
-            while (iter.hasNext()) {
-                Arg arg = iter.next();
-
-                if (arg != null) {
-                    arg.setKey(
-                            ValidatorUtils.replace(arg.getKey(), key, replaceValue));
-                }
-            }
-        }
-    }
-
-    /**
-     * Checks if the validator is listed as a dependency.
-     * @param validatorName Name of the validator to check.
-     * @return Whether the field is dependant on a validator.
-     */
-    public boolean isDependency(String validatorName) {
-        return this.dependencyList.contains(validatorName);
-    }
-
-    /**
-     * Gets an unmodifiable <code>List</code> of the dependencies in the same
-     * order they were defined in parameter passed to the setDepends() method.
-     * @return A list of the Field's dependancies.
-     */
-    public List<String> getDependencyList() {
-        return Collections.unmodifiableList(this.dependencyList);
-    }
-
-    /**
-     * Creates and returns a copy of this object.
-     * @return A copy of the Field.
-     */
-    @Override
-    public Object clone() {
-        Field field = null;
-        try {
-            field = (Field) super.clone();
-        } catch(CloneNotSupportedException e) {
-            throw new RuntimeException(e.toString());
+    private void processVars(final String key, final String replaceValue) {
+        for (final String varKey : getVarMap().keySet()) {
+            final Var var = this.getVar(varKey);
+            var.setValue(ValidatorUtils.replace(var.getValue(), key, replaceValue));
         }
 
-        @SuppressWarnings("unchecked") // empty array always OK; cannot check this at compile time
-        final Map<String, Arg>[] tempMap = new Map[this.args.length];
-        field.args = tempMap;
-        for (int i = 0; i < this.args.length; i++) {
-            if (this.args[i] == null) {
-                continue;
-            }
-
-            Map<String, Arg> argMap = new HashMap<String, Arg>(this.args[i]);
-            Iterator<Entry<String, Arg>> iter = argMap.entrySet().iterator();
-            while (iter.hasNext()) {
-                Entry<String, Arg> entry = iter.next();
-                String validatorName = entry.getKey();
-                Arg arg = entry.getValue();
-                argMap.put(validatorName, (Arg) arg.clone());
-            }
-            field.args[i] = argMap;
-        }
-
-        field.hVars = ValidatorUtils.copyFastHashMap(hVars);
-        field.hMsgs = ValidatorUtils.copyFastHashMap(hMsgs);
-
-        return field;
-    }
-
-    /**
-     * Returns a string representation of the object.
-     * @return A string representation of the object.
-     */
-    @Override
-    public String toString() {
-        StringBuilder results = new StringBuilder();
-
-        results.append("\t\tkey = " + key + "\n");
-        results.append("\t\tproperty = " + property + "\n");
-        results.append("\t\tindexedProperty = " + indexedProperty + "\n");
-        results.append("\t\tindexedListProperty = " + indexedListProperty + "\n");
-        results.append("\t\tdepends = " + depends + "\n");
-        results.append("\t\tpage = " + page + "\n");
-        results.append("\t\tfieldOrder = " + fieldOrder + "\n");
-
-        if (hVars != null) {
-            results.append("\t\tVars:\n");
-            for (Iterator<?> i = getVarMap().keySet().iterator(); i.hasNext();) {
-                Object key = i.next();
-                results.append("\t\t\t");
-                results.append(key);
-                results.append("=");
-                results.append(getVarMap().get(key));
-                results.append("\n");
-            }
-        }
-
-        return results.toString();
-    }
-
-    /**
-     * Returns an indexed property from the object we're validating.
-     *
-     * @param bean The bean to extract the indexed values from.
-     * @throws ValidatorException If there's an error looking up the property
-     * or, the property found is not indexed.
-     */
-    Object[] getIndexedProperty(Object bean) throws ValidatorException {
-        Object indexedProperty = null;
-
-        try {
-            indexedProperty =
-                PropertyUtils.getProperty(bean, this.getIndexedListProperty());
-
-        } catch(IllegalAccessException e) {
-            throw new ValidatorException(e.getMessage());
-        } catch(InvocationTargetException e) {
-            throw new ValidatorException(e.getMessage());
-        } catch(NoSuchMethodException e) {
-            throw new ValidatorException(e.getMessage());
-        }
-
-        if (indexedProperty instanceof Collection) {
-            return ((Collection<?>) indexedProperty).toArray();
-
-        } else if (indexedProperty.getClass().isArray()) {
-            return (Object[]) indexedProperty;
-
-        } else {
-            throw new ValidatorException(this.getKey() + " is not indexed");
-        }
-
-    }
-    /**
-     * Returns the size of an indexed property from the object we're validating.
-     *
-     * @param bean The bean to extract the indexed values from.
-     * @throws ValidatorException If there's an error looking up the property
-     * or, the property found is not indexed.
-     */
-    private int getIndexedPropertySize(Object bean) throws ValidatorException {
-        Object indexedProperty = null;
-
-        try {
-            indexedProperty =
-                PropertyUtils.getProperty(bean, this.getIndexedListProperty());
-
-        } catch(IllegalAccessException e) {
-            throw new ValidatorException(e.getMessage());
-        } catch(InvocationTargetException e) {
-            throw new ValidatorException(e.getMessage());
-        } catch(NoSuchMethodException e) {
-            throw new ValidatorException(e.getMessage());
-        }
-
-        if (indexedProperty == null) {
-            return 0;
-        } else if (indexedProperty instanceof Collection) {
-            return ((Collection<?>)indexedProperty).size();
-        } else if (indexedProperty.getClass().isArray()) {
-            return ((Object[])indexedProperty).length;
-        } else {
-            throw new ValidatorException(this.getKey() + " is not indexed");
-        }
-
-    }
-
-    /**
-     * Executes the given ValidatorAction and all ValidatorActions that it
-     * depends on.
-     * @return true if the validation succeeded.
-     */
-    private boolean validateForRule(
-        ValidatorAction va,
-        ValidatorResults results,
-        Map<String, ValidatorAction> actions,
-        Map<String, Object> params,
-        int pos)
-        throws ValidatorException {
-
-        ValidatorResult result = results.getValidatorResult(this.getKey());
-        if (result != null && result.containsAction(va.getName())) {
-            return result.isValid(va.getName());
-        }
-
-        if (!this.runDependentValidators(va, results, actions, params, pos)) {
-            return false;
-        }
-
-        return va.executeValidationMethod(this, params, results, pos);
     }
 
     /**
@@ -851,24 +716,21 @@ public class Field implements Cloneable, Serializable {
      * @throws ValidatorException If there's an error running a validator
      */
     private boolean runDependentValidators(
-        ValidatorAction va,
-        ValidatorResults results,
-        Map<String, ValidatorAction> actions,
-        Map<String, Object> params,
-        int pos)
+        final ValidatorAction va,
+        final ValidatorResults results,
+        final Map<String, ValidatorAction> actions,
+        final Map<String, Object> params,
+        final int pos)
         throws ValidatorException {
 
-        List<String> dependentValidators = va.getDependencyList();
+        final List<String> dependentValidators = va.getDependencyList();
 
         if (dependentValidators.isEmpty()) {
             return true;
         }
 
-        Iterator<String> iter = dependentValidators.iterator();
-        while (iter.hasNext()) {
-            String depend = iter.next();
-
-            ValidatorAction action = actions.get(depend);
+        for (final String depend : dependentValidators) {
+            final ValidatorAction action = actions.get(depend);
             if (action == null) {
                 this.handleMissingAction(depend);
             }
@@ -882,6 +744,115 @@ public class Field implements Cloneable, Serializable {
     }
 
     /**
+     * Sets the flag that determines whether client-side scripting should
+     * be generated for this field.
+     * @param clientValidation the scripting flag
+     * @see #isClientValidation()
+     * @since 1.4
+     */
+    public void setClientValidation(final boolean clientValidation) {
+        this.clientValidation = clientValidation;
+    }
+
+    /**
+     * Sets the validation rules for this field as a comma separated list.
+     * @param depends A comma separated list of validator names.
+     */
+    public void setDepends(final String depends) {
+        this.depends = depends;
+
+        this.dependencyList.clear();
+
+        final StringTokenizer st = new StringTokenizer(depends, ",");
+        while (st.hasMoreTokens()) {
+            final String depend = st.nextToken().trim();
+
+            if (depend != null && !depend.isEmpty()) {
+                this.dependencyList.add(depend);
+            }
+        }
+    }
+
+    /**
+     * Sets the position of the <code>Field</code> in the validation list.
+     * @param fieldOrder The field position.
+     */
+    public void setFieldOrder(final int fieldOrder) {
+        this.fieldOrder = fieldOrder;
+    }
+
+    /**
+     * Sets the indexed property name of the field.
+     * @param indexedListProperty The field's indexed List property name.
+     */
+    public void setIndexedListProperty(final String indexedListProperty) {
+        this.indexedListProperty = indexedListProperty;
+    }
+    /**
+     * Sets the indexed property name of the field.
+     * @param indexedProperty The field's indexed property name.
+     */
+    public void setIndexedProperty(final String indexedProperty) {
+        this.indexedProperty = indexedProperty;
+    }
+
+    /**
+     * Sets a unique key for the field.  This can be used to change
+     * the key temporarily to have a unique key for an indexed field.
+     * @param key a unique key for the field
+     */
+    public void setKey(final String key) {
+        this.key = key;
+    }
+
+    /**
+     * Sets the page value that the Field is associated with for
+     * validation.
+     * @param page The page number.
+     */
+    public void setPage(final int page) {
+        this.page = page;
+    }
+
+    /**
+     * Sets the property name of the field.
+     * @param property The field's property name.
+     */
+    public void setProperty(final String property) {
+        this.property = property;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     * @return A string representation of the object.
+     */
+    @Override
+    public String toString() {
+        final StringBuilder results = new StringBuilder();
+
+        results.append("\t\tkey = " + key + "\n");
+        results.append("\t\tproperty = " + property + "\n");
+        results.append("\t\tindexedProperty = " + indexedProperty + "\n");
+        results.append("\t\tindexedListProperty = " + indexedListProperty + "\n");
+        results.append("\t\tdepends = " + depends + "\n");
+        results.append("\t\tpage = " + page + "\n");
+        results.append("\t\tfieldOrder = " + fieldOrder + "\n");
+
+        if (hVars != null) {
+            results.append("\t\tVars:\n");
+            for (final Object key1 : getVarMap().keySet()) {
+                results.append("\t\t\t");
+                results.append(key1);
+                results.append("=");
+                results.append(getVarMap().get(key1));
+                results.append("\n");
+            }
+        }
+
+        return results.toString();
+    }
+
+    /**
      * Run the configured validations on this field.  Run all validations
      * in the depends clause over each item in turn, returning when the first
      * one fails.
@@ -892,37 +863,35 @@ public class Field implements Cloneable, Serializable {
      * this field.
      * @throws ValidatorException If an error occurs during validation.
      */
-    public ValidatorResults validate(Map<String, Object> params, Map<String, ValidatorAction> actions)
-        throws ValidatorException {
+    public ValidatorResults validate(final Map<String, Object> params, final Map<String, ValidatorAction> actions)
+            throws ValidatorException {
 
         if (this.getDepends() == null) {
             return new ValidatorResults();
         }
 
-        ValidatorResults allResults = new ValidatorResults();
+        final ValidatorResults allResults = new ValidatorResults();
 
-        Object bean = params.get(Validator.BEAN_PARAM);
-        int numberOfFieldsToValidate =
-            this.isIndexed() ? this.getIndexedPropertySize(bean) : 1;
+        final Object bean = params.get(Validator.BEAN_PARAM);
+        final int numberOfFieldsToValidate = this.isIndexed() ? this.getIndexedPropertySize(bean) : 1;
 
         for (int fieldNumber = 0; fieldNumber < numberOfFieldsToValidate; fieldNumber++) {
 
-            Iterator<String> dependencies = this.dependencyList.iterator();
-            ValidatorResults results = new ValidatorResults();
-            while (dependencies.hasNext()) {
-                String depend = dependencies.next();
+            final ValidatorResults results = new ValidatorResults();
+            synchronized (dependencyList) {
+                for (final String depend : this.dependencyList) {
 
-                ValidatorAction action = actions.get(depend);
-                if (action == null) {
-                    this.handleMissingAction(depend);
-                }
+                    final ValidatorAction action = actions.get(depend);
+                    if (action == null) {
+                        this.handleMissingAction(depend);
+                    }
 
-                boolean good =
-                    validateForRule(action, results, actions, params, fieldNumber);
+                    final boolean good = validateForRule(action, results, actions, params, fieldNumber);
 
-                if (!good) {
-                    allResults.merge(results);
-                    return allResults;
+                    if (!good) {
+                        allResults.merge(results);
+                        return allResults;
+                    }
                 }
             }
             allResults.merge(results);
@@ -932,34 +901,28 @@ public class Field implements Cloneable, Serializable {
     }
 
     /**
-     * Called when a validator name is used in a depends clause but there is
-     * no know ValidatorAction configured for that name.
-     * @param name The name of the validator in the depends list.
-     * @throws ValidatorException
+     * Executes the given ValidatorAction and all ValidatorActions that it
+     * depends on.
+     * @return true if the validation succeeded.
      */
-    private void handleMissingAction(String name) throws ValidatorException {
-        throw new ValidatorException("No ValidatorAction named " + name
-                + " found for field " + this.getProperty());
-    }
+    private boolean validateForRule(
+        final ValidatorAction va,
+        final ValidatorResults results,
+        final Map<String, ValidatorAction> actions,
+        final Map<String, Object> params,
+        final int pos)
+        throws ValidatorException {
 
-    /**
-     * Returns a Map of String Msg names to Msg objects.
-     * @since Validator 1.2.0
-     * @return A Map of the Field's messages.
-     */
-    @SuppressWarnings("unchecked") // FastHashMap does not support generics
-    protected Map<String, Msg> getMsgMap() {
-        return hMsgs;
-    }
+        final ValidatorResult result = results.getValidatorResult(this.getKey());
+        if (result != null && result.containsAction(va.getName())) {
+            return result.isValid(va.getName());
+        }
 
-    /**
-     * Returns a Map of String Var names to Var objects.
-     * @since Validator 1.2.0
-     * @return A Map of the Field's variables.
-     */
-    @SuppressWarnings("unchecked") // FastHashMap does not support generics
-    protected Map<String, Var> getVarMap() {
-        return hVars;
+        if (!this.runDependentValidators(va, results, actions, params, pos)) {
+            return false;
+        }
+
+        return va.executeValidationMethod(this, params, results, pos);
     }
 }
 

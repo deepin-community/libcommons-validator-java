@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Apache Commons Validator
 Upstream-Contact: http://commons.apache.org/validator/
-Source: http://www.apache.org/dist/commons/validator/
+Source: https://www.apache.org/dist/commons/validator/
 
 Files: *
 Copyright: 2002-2016, The Apache Software Foundation

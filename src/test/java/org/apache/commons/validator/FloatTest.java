@@ -16,49 +16,26 @@
  */
 package org.apache.commons.validator;
 
+import org.junit.jupiter.api.Test;
 
-/**                                                       
+/**
  * Performs Validation Test for <code>float</code> validations.
- *
- * @version $Revision: 1649191 $
  */
 public class FloatTest extends AbstractNumberTest {
 
-    public FloatTest(String name) {
-        super(name);
-        ACTION = "float";
-        FORM_KEY = "floatForm";
+    public FloatTest() {
+        action = "float";
+        formKey = "floatForm";
     }
 
     /**
      * Tests the float validation.
      */
+    @Test
     public void testFloat() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
+        final ValueBean info = new ValueBean();
         info.setValue("0");
-
-        valueTest(info, true);
-    }
-
-    /**
-     * Tests the float validation.
-     */
-    public void testFloatMin() throws ValidatorException {
-        // Create bean to run test on.
-        ValueBean info = new ValueBean();
-        info.setValue(new Float(Float.MIN_VALUE).toString());
-
-        valueTest(info, true);
-    }
-
-    /**
-     * Tests the float validation.
-     */
-    public void testFloatMax() throws ValidatorException {
-        // Create bean to run test on.
-        ValueBean info = new ValueBean();
-        info.setValue(new Float(Float.MAX_VALUE).toString());
 
         valueTest(info, true);
     }
@@ -66,11 +43,36 @@ public class FloatTest extends AbstractNumberTest {
     /**
      * Tests the float validation failure.
      */
+    @Test
     public void testFloatFailure() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
+        final ValueBean info = new ValueBean();
 
         valueTest(info, false);
     }
 
-}                                                         
+    /**
+     * Tests the float validation.
+     */
+    @Test
+    public void testFloatMax() throws ValidatorException {
+        // Create bean to run test on.
+        final ValueBean info = new ValueBean();
+        info.setValue(Float.toString(Float.MAX_VALUE));
+
+        valueTest(info, true);
+    }
+
+    /**
+     * Tests the float validation.
+     */
+    @Test
+    public void testFloatMin() throws ValidatorException {
+        // Create bean to run test on.
+        final ValueBean info = new ValueBean();
+        info.setValue(Float.toString(Float.MIN_VALUE));
+
+        valueTest(info, true);
+    }
+
+}

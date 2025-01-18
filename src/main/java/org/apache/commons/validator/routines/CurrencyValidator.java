@@ -24,7 +24,7 @@ import java.text.Format;
  *
  * <p>This is one implementation of a currency validator that has the following features:</p>
  *    <ul>
- *       <li>It is <i>lenient</i> about the the presence of the <i>currency symbol</i></li>
+ *       <li>It is <i>lenient</i> about the presence of the <i>currency symbol</i></li>
  *       <li>It converts the currency to a <code>java.math.BigDecimal</code></li>
  *    </ul>
  *
@@ -37,10 +37,9 @@ import java.text.Format;
  *
  * <p>Pick the appropriate validator, depending on the type (e.g Float, Double, Integer, Long etc)
  *    you want the currency converted to. One thing to note - only the CurrencyValidator
- *    implements <i>lenient</i> behaviour regarding the currency symbol.</p>
+ *    implements <i>lenient</i> behavior regarding the currency symbol.</p>
  *
- * @version $Revision: 1739356 $
- * @since Validator 1.3.0
+ * @since 1.3.0
  */
 public class CurrencyValidator extends BigDecimalValidator {
 
@@ -52,7 +51,7 @@ public class CurrencyValidator extends BigDecimalValidator {
     private static final char CURRENCY_SYMBOL = '\u00A4';
 
     /**
-     * Return a singleton instance of this validator.
+     * Gets the singleton instance of this validator.
      * @return A singleton instance of the CurrencyValidator.
      */
     public static BigDecimalValidator getInstance() {
@@ -60,21 +59,21 @@ public class CurrencyValidator extends BigDecimalValidator {
     }
 
     /**
-     * Construct a <i>strict</i> instance.
+     * Constructs a <i>strict</i> instance.
      */
     public CurrencyValidator() {
         this(true, true);
     }
 
     /**
-     * Construct an instance with the specified strict setting.
+     * Constructs an instance with the specified strict setting.
      *
-     * @param strict <code>true</code> if strict
+     * @param strict {@code true} if strict
      *        <code>Format</code> parsing should be used.
-     * @param allowFractions <code>true</code> if fractions are
-     *        allowed or <code>false</code> if integers only.
+     * @param allowFractions {@code true} if fractions are
+     *        allowed or {@code false} if integers only.
      */
-    public CurrencyValidator(boolean strict, boolean allowFractions) {
+    public CurrencyValidator(final boolean strict, final boolean allowFractions) {
         super(strict, CURRENCY_FORMAT, allowFractions);
     }
 
@@ -83,16 +82,16 @@ public class CurrencyValidator extends BigDecimalValidator {
      *
      * <p>This implementation is lenient whether the currency symbol
      *    is present or not. The default <code>NumberFormat</code>
-     *    behaviour is for the parsing to "fail" if the currency
+     *    behavior is for the parsing to "fail" if the currency
      *    symbol is missing. This method re-parses with a format
      *    without the currency symbol if it fails initially.</p>
      *
      * @param value The value to be parsed.
      * @param formatter The Format to parse the value with.
-     * @return The parsed value if valid or <code>null</code> if invalid.
+     * @return The parsed value if valid or {@code null} if invalid.
      */
     @Override
-    protected Object parse(String value, Format formatter) {
+    protected Object parse(final String value, final Format formatter) {
 
         // Initial parse of the value
         Object parsedValue = super.parse(value, formatter);
@@ -101,10 +100,10 @@ public class CurrencyValidator extends BigDecimalValidator {
         }
 
         // Re-parse using a pattern without the currency symbol
-        DecimalFormat decimalFormat = (DecimalFormat)formatter;
-        String pattern = decimalFormat.toPattern();
+        final DecimalFormat decimalFormat = (DecimalFormat) formatter;
+        final String pattern = decimalFormat.toPattern();
         if (pattern.indexOf(CURRENCY_SYMBOL) >= 0) {
-            StringBuilder buffer = new StringBuilder(pattern.length());
+            final StringBuilder buffer = new StringBuilder(pattern.length());
             for (int i = 0; i < pattern.length(); i++) {
                 if (pattern.charAt(i) != CURRENCY_SYMBOL) {
                     buffer.append(pattern.charAt(i));

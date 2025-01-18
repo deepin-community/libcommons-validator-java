@@ -1,3 +1,38 @@
+libcommons-validator-java (1:1.9.0-1) unstable; urgency=medium
+
+  * New upstream release
+    - Refreshed the patch
+    - New dependency on junit5
+    - Updated the Maven rules
+  * Removed the -java-doc package
+  * Standards-Version updated to 4.7.0
+  * Switch to debhelper level 13
+
+ -- Emmanuel Bourg <ebourg@apache.org>  Mon, 18 Nov 2024 10:30:48 +0100
+
+libcommons-validator-java (1:1.7-1) unstable; urgency=medium
+
+  [ Sun Min ]
+  * Team upload.
+  * New upstream release.
+  * Add commons-csv-java as new dependency.
+  * Do not ignore test failures,remove the test class
+    DomainValidatorStartupTest.java.
+
+  [ tony mancill ]
+  * Import .xz compressed orig tarball
+
+ -- Sun Min <sunmin89@outlook.com>  Fri, 3 Feb 2023 14:16:10 +0800
+
+libcommons-validator-java (1:1.6-3) unstable; urgency=medium
+
+  * Team upload.
+  * Update Standards-Version to 4.6.2.
+  * Update upstream release url and vcs-git url and tar script. 
+  * Upgrade source/target version to java 1.8. (Closes: #1028187)
+
+ -- Sun Min <sunmin89@outlook.com>  Tue, 10 Jan 2023 19:47:31 +0800
+
 libcommons-validator-java (1:1.6-2) unstable; urgency=medium
 
   * Team upload.

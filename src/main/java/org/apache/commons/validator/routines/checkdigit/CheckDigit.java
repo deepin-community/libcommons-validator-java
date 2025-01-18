@@ -16,6 +16,8 @@
  */
 package org.apache.commons.validator.routines.checkdigit;
 
+import org.apache.commons.validator.routines.CodeValidator;
+
 /**
  * <b>Check Digit</b> calculation and validation.
  * <p>
@@ -28,24 +30,23 @@ package org.apache.commons.validator.routines.checkdigit;
  * </p>
  * <p>
  * Although Commons Validator is primarily concerned with validation,
- * {@link CheckDigit} also defines behaviour for calculating/generating check
+ * {@link CheckDigit} also defines behavior for calculating/generating check
  * digits, since it makes sense that users will want to (re-)use the
  * same logic for both. The {@link org.apache.commons.validator.routines.ISBNValidator}
  * makes specific use of this feature by providing the facility to validate ISBN-10 codes
  * and then convert them to the new ISBN-13 standard.
  * </p>
  * <p>
- * CheckDigit is used by the new generic @link CodeValidator} implementation.
+ * CheckDigit is used by the new generic {@link CodeValidator} implementation.
  * </p>
  *
- * <h3>Implementations</h3>
- * See the 
+ * <h2>Implementations</h2>
+ * See the
  * <a href="package-summary.html">Package Summary</a> for a full
  * list of implementations provided within Commons Validator.
  *
  * @see org.apache.commons.validator.routines.CodeValidator
- * @version $Revision: 1649287 $
- * @since Validator 1.4
+ * @since 1.4
  */
 public interface CheckDigit {
 
@@ -63,8 +64,8 @@ public interface CheckDigit {
      * Validates the check digit for the code.
      *
      * @param code The code to validate, the string must include the check digit.
-     * @return <code>true</code> if the check digit is valid, otherwise
-     * <code>false</code>.
+     * @return {@code true} if the check digit is valid, otherwise
+     * {@code false}.
      */
     boolean isValid(String code);
 

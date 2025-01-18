@@ -18,6 +18,7 @@ package org.apache.commons.validator.routines;
 
 import java.io.Serializable;
 
+import org.apache.commons.validator.GenericValidator;
 import org.apache.commons.validator.routines.checkdigit.CheckDigit;
 
 /**
@@ -43,7 +44,7 @@ import org.apache.commons.validator.routines.checkdigit.CheckDigit;
  * nor do they generally check the format/length).
  * To be sure that you are passing valid input to a method use {@link #validate(String)} as follows:
  * <pre>
- * Object valid = validator.validate(input); 
+ * Object valid = validator.validate(input);
  * if (valid != null) {
  *    some_method(valid.toString());
  * }
@@ -63,33 +64,80 @@ import org.apache.commons.validator.routines.checkdigit.CheckDigit;
  * expression (i.e. use the <code>(?:   )</code> notation).
  * <br>
  * Or just avoid using parentheses except for the parts you want to capture
- * 
- * @version $Revision: 1781789 $
- * @since Validator 1.4
+ *
+ * @since 1.4
  */
 public final class CodeValidator implements Serializable {
 
     private static final long serialVersionUID = 446960910870938233L;
 
+    /** The format regular expression validator. */
     private final RegexValidator regexValidator;
+
+    /** The minimum length of the code. */
     private final int minLength;
+
+    /** The maximum length of the code. */
     private final int maxLength;
+
+    /** The check digit validation routine. */
     private final CheckDigit checkdigit;
 
     /**
-     * Construct a code validator with a specified regular
+     * Constructs a code validator with a specified regular expression,
+     * validator and {@link CheckDigit} validation.
+     *
+     * @param regexValidator The format regular expression validator
+     * @param checkdigit The check digit validation routine.
+     */
+    public CodeValidator(final RegexValidator regexValidator, final CheckDigit checkdigit) {
+        this(regexValidator, -1, -1, checkdigit);
+    }
+
+    /**
+     * Constructs a code validator with a specified regular expression,
+     * validator, length and {@link CheckDigit} validation.
+     *
+     * @param regexValidator The format regular expression validator
+     * @param length The length of the code
+     *  (sets the mimimum/maximum to the same value)
+     * @param checkdigit The check digit validation routine
+     */
+    public CodeValidator(final RegexValidator regexValidator, final int length, final CheckDigit checkdigit) {
+        this(regexValidator, length, length, checkdigit);
+    }
+
+    /**
+     * Constructs a code validator with a specified regular expression
+     * validator, minimum/maximum length and {@link CheckDigit} validation.
+     *
+     * @param regexValidator The format regular expression validator
+     * @param minLength The minimum length of the code
+     * @param maxLength The maximum length of the code
+     * @param checkdigit The check digit validation routine
+     */
+    public CodeValidator(final RegexValidator regexValidator, final int minLength, final int maxLength,
+            final CheckDigit checkdigit) {
+        this.regexValidator = regexValidator;
+        this.minLength = minLength;
+        this.maxLength = maxLength;
+        this.checkdigit = checkdigit;
+    }
+
+    /**
+     * Constructs a code validator with a specified regular
      * expression and {@link CheckDigit}.
      * The RegexValidator validator is created to be case-sensitive
      *
      * @param regex The format regular expression
      * @param checkdigit The check digit validation routine
      */
-    public CodeValidator(String regex, CheckDigit checkdigit) {
+    public CodeValidator(final String regex, final CheckDigit checkdigit) {
         this(regex, -1, -1, checkdigit);
     }
 
     /**
-     * Construct a code validator with a specified regular
+     * Constructs a code validator with a specified regular
      * expression, length and {@link CheckDigit}.
      * The RegexValidator validator is created to be case-sensitive
      *
@@ -98,12 +146,12 @@ public final class CodeValidator implements Serializable {
      *  (sets the mimimum/maximum to the same)
      * @param checkdigit The check digit validation routine
      */
-    public CodeValidator(String regex, int length, CheckDigit checkdigit) {
+    public CodeValidator(final String regex, final int length, final CheckDigit checkdigit) {
         this(regex, length, length, checkdigit);
     }
 
     /**
-     * Construct a code validator with a specified regular
+     * Constructs a code validator with a specified regular
      * expression, minimum/maximum length and {@link CheckDigit} validation.
      * The RegexValidator validator is created to be case-sensitive
      *
@@ -112,9 +160,9 @@ public final class CodeValidator implements Serializable {
      * @param maxLength The maximum length of the code
      * @param checkdigit The check digit validation routine
      */
-    public CodeValidator(String regex, int minLength, int maxLength,
-            CheckDigit checkdigit) {
-        if (regex != null && regex.length() > 0) {
+    public CodeValidator(final String regex, final int minLength, final int maxLength,
+            final CheckDigit checkdigit) {
+        if (!GenericValidator.isBlankOrNull(regex)) {
             this.regexValidator = new RegexValidator(regex);
         } else {
             this.regexValidator = null;
@@ -125,48 +173,7 @@ public final class CodeValidator implements Serializable {
     }
 
     /**
-     * Construct a code validator with a specified regular expression,
-     * validator and {@link CheckDigit} validation.
-     *
-     * @param regexValidator The format regular expression validator
-     * @param checkdigit The check digit validation routine.
-     */
-    public CodeValidator(RegexValidator regexValidator, CheckDigit checkdigit) {
-        this(regexValidator, -1, -1, checkdigit);
-    }
-
-    /**
-     * Construct a code validator with a specified regular expression,
-     * validator, length and {@link CheckDigit} validation.
-     *
-     * @param regexValidator The format regular expression validator
-     * @param length The length of the code
-     *  (sets the mimimum/maximum to the same value)
-     * @param checkdigit The check digit validation routine
-     */
-    public CodeValidator(RegexValidator regexValidator, int length, CheckDigit checkdigit) {
-        this(regexValidator, length, length, checkdigit);
-    }
-
-    /**
-     * Construct a code validator with a specified regular expression
-     * validator, minimum/maximum length and {@link CheckDigit} validation.
-     *
-     * @param regexValidator The format regular expression validator
-     * @param minLength The minimum length of the code
-     * @param maxLength The maximum length of the code
-     * @param checkdigit The check digit validation routine
-     */
-    public CodeValidator(RegexValidator regexValidator, int minLength, int maxLength,
-            CheckDigit checkdigit) {
-        this.regexValidator = regexValidator;
-        this.minLength = minLength;
-        this.maxLength = maxLength;
-        this.checkdigit = checkdigit;
-    }
-
-    /**
-     * Return the check digit validation routine.
+     * Gets the check digit validation routine.
      * <p>
      * <b>N.B.</b> Optional, if not set no Check Digit
      * validation will be performed on the code.
@@ -178,20 +185,7 @@ public final class CodeValidator implements Serializable {
     }
 
     /**
-     * Return the minimum length of the code.
-     * <p>
-     * <b>N.B.</b> Optional, if less than zero the
-     * minimum length will not be checked.
-     *
-     * @return The minimum length of the code or
-     * <code>-1</code> if the code has no minimum length
-     */
-    public int getMinLength() {
-        return minLength;
-    }
-
-    /**
-     * Return the maximum length of the code.
+     * Gets the maximum length of the code.
      * <p>
      * <b>N.B.</b> Optional, if less than zero the
      * maximum length will not be checked.
@@ -204,7 +198,20 @@ public final class CodeValidator implements Serializable {
     }
 
     /**
-     * Return the <i>regular expression</i> validator.
+     * Gets the minimum length of the code.
+     * <p>
+     * <b>N.B.</b> Optional, if less than zero the
+     * minimum length will not be checked.
+     *
+     * @return The minimum length of the code or
+     * <code>-1</code> if the code has no minimum length
+     */
+    public int getMinLength() {
+        return minLength;
+    }
+
+    /**
+     * Gets the <i>regular expression</i> validator.
      * <p>
      * <b>N.B.</b> Optional, if not set no regular
      * expression validation will be performed on the code.
@@ -216,8 +223,8 @@ public final class CodeValidator implements Serializable {
     }
 
     /**
-     * Validate the code returning either <code>true</code>
-     * or <code>false</code>.
+     * Validate the code returning either {@code true}
+     * or {@code false}.
      * <p>
      * This calls {@link #validate(String)} and returns false
      * if the return value is null, true otherwise.
@@ -227,36 +234,33 @@ public final class CodeValidator implements Serializable {
      * change the input as part of the validation.
      *
      * @param input The code to validate
-     * @return <code>true</code> if valid, otherwise
-     * <code>false</code>
+     * @return {@code true} if valid, otherwise
+     * {@code false}
      */
-    public boolean isValid(String input) {
-        return (validate(input) != null);
+    public boolean isValid(final String input) {
+        return validate(input) != null;
     }
 
     /**
      * Validate the code returning either the valid code or
-     * <code>null</code> if invalid.
+     * {@code null} if invalid.
      * <p>
      * Note that this method trims the input
      * and if there is a {@link RegexValidator} it may also
      * change the input as part of the validation.
      *
      * @param input The code to validate
-     * @return The code if valid, otherwise <code>null</code>
+     * @return The code if valid, otherwise {@code null}
      * if invalid
      */
-    public Object validate(String input) {
-
+    public Object validate(final String input) {
         if (input == null) {
             return null;
         }
-
         String code = input.trim();
-        if (code.length() == 0) {
+        if (code.isEmpty()) {
             return null;
         }
-
         // validate/reformat using regular expression
         if (regexValidator != null) {
             code = regexValidator.validate(code);
@@ -264,20 +268,16 @@ public final class CodeValidator implements Serializable {
                 return null;
             }
         }
-
         // check the length (must be done after validate as that can change the code)
-        if ((minLength >= 0 && code.length() < minLength) ||
-            (maxLength >= 0 && code.length() > maxLength)) {
+        if (minLength >= 0 && code.length() < minLength ||
+            maxLength >= 0 && code.length() > maxLength) {
             return null;
         }
-
         // validate the check digit
         if (checkdigit != null && !checkdigit.isValid(code)) {
             return null;
         }
-
         return code;
-
     }
 
 }

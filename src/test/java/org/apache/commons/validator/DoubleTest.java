@@ -16,50 +16,26 @@
  */
 package org.apache.commons.validator;
 
+import org.junit.jupiter.api.Test;
 
-/**                                                       
+/**
  * Performs Validation Test for <code>double</code> validations.
- *
- * @version $Revision: 1649191 $
  */
 public class DoubleTest extends AbstractNumberTest {
 
-    public DoubleTest(String name) {
-        super(name);
-        ACTION = "double";
-        FORM_KEY = "doubleForm";
+    public DoubleTest() {
+        action = "double";
+        formKey = "doubleForm";
     }
-
 
     /**
      * Tests the double validation.
      */
+    @Test
     public void testDouble() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
+        final ValueBean info = new ValueBean();
         info.setValue("0");
-
-        valueTest(info, true);
-    }
-
-    /**
-     * Tests the double validation.
-     */
-    public void testDoubleMin() throws ValidatorException {
-        // Create bean to run test on.
-        ValueBean info = new ValueBean();
-        info.setValue(new Double(Double.MIN_VALUE).toString());
-
-        valueTest(info, true);
-    }
-
-    /**
-     * Tests the double validation.
-     */
-    public void testDoubleMax() throws ValidatorException {
-        // Create bean to run test on.
-        ValueBean info = new ValueBean();
-        info.setValue(new Double(Double.MAX_VALUE).toString());
 
         valueTest(info, true);
     }
@@ -67,11 +43,36 @@ public class DoubleTest extends AbstractNumberTest {
     /**
      * Tests the double validation failure.
      */
+    @Test
     public void testDoubleFailure() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
+        final ValueBean info = new ValueBean();
 
         valueTest(info, false);
     }
 
-}                                                         
+    /**
+     * Tests the double validation.
+     */
+    @Test
+    public void testDoubleMax() throws ValidatorException {
+        // Create bean to run test on.
+        final ValueBean info = new ValueBean();
+        info.setValue(Double.toString(Double.MAX_VALUE));
+
+        valueTest(info, true);
+    }
+
+    /**
+     * Tests the double validation.
+     */
+    @Test
+    public void testDoubleMin() throws ValidatorException {
+        // Create bean to run test on.
+        final ValueBean info = new ValueBean();
+        info.setValue(Double.toString(Double.MIN_VALUE));
+
+        valueTest(info, true);
+    }
+
+}

@@ -59,8 +59,7 @@ import java.util.Locale;
  *       <li>using a specified pattern with a specified <code>Locale</code></li>
  *    </ul>
  *
- * @version $Revision: 1739356 $
- * @since Validator 1.3.0
+ * @since 1.3.0
  */
 public class DoubleValidator extends AbstractNumberValidator {
 
@@ -69,7 +68,7 @@ public class DoubleValidator extends AbstractNumberValidator {
     private static final DoubleValidator VALIDATOR = new DoubleValidator();
 
     /**
-     * Return a singleton instance of this validator.
+     * Gets the singleton instance of this validator.
      * @return A singleton instance of the DoubleValidator.
      */
     public static DoubleValidator getInstance() {
@@ -77,7 +76,7 @@ public class DoubleValidator extends AbstractNumberValidator {
     }
 
     /**
-     * Construct a <i>strict</i> instance.
+     * Constructs a <i>strict</i> instance.
      */
     public DoubleValidator() {
         this(true, STANDARD_FORMAT);
@@ -99,63 +98,26 @@ public class DoubleValidator extends AbstractNumberValidator {
      *           <i>percent</i> number formats (the default).</li>
      *    </ul>
      *
-     * @param strict <code>true</code> if strict
+     * @param strict {@code true} if strict
      *        <code>Format</code> parsing should be used.
      * @param formatType The <code>NumberFormat</code> type to
      *        create for validation, default is STANDARD_FORMAT.
      */
-    public DoubleValidator(boolean strict, int formatType) {
+    public DoubleValidator(final boolean strict, final int formatType) {
         super(strict, formatType, true);
     }
 
     /**
-     * <p>Validate/convert a <code>Double</code> using the default
-     *    <code>Locale</code>.
+     * Check if the value is within a specified range.
      *
-     * @param value The value validation is being performed on.
-     * @return The parsed <code>Double</code> if valid or <code>null</code>
-     *  if invalid.
+     * @param value The <code>Number</code> value to check.
+     * @param min The minimum value of the range.
+     * @param max The maximum value of the range.
+     * @return {@code true} if the value is within the
+     *         specified range.
      */
-    public Double validate(String value) {
-        return (Double)parse(value, (String)null, (Locale)null);
-    }
-
-    /**
-     * <p>Validate/convert a <code>Double</code> using the
-     *    specified <i>pattern</i>.
-     *
-     * @param value The value validation is being performed on.
-     * @param pattern The pattern used to validate the value against.
-     * @return The parsed <code>BigDecimal</code> if valid or <code>null</code> if invalid.
-     */
-    public Double validate(String value, String pattern) {
-        return (Double)parse(value, pattern, (Locale)null);
-    }
-
-    /**
-     * <p>Validate/convert a <code>Double</code> using the
-     *    specified <code>Locale</code>.
-     *
-     * @param value The value validation is being performed on.
-     * @param locale The locale to use for the number format, system default if null.
-     * @return The parsed <code>Double</code> if valid or <code>null</code> if invalid.
-     */
-    public Double validate(String value, Locale locale) {
-        return (Double)parse(value, (String)null, locale);
-    }
-
-    /**
-     * <p>Validate/convert a <code>Double</code> using the
-     *    specified pattern and/ or <code>Locale</code>.
-     *
-     * @param value The value validation is being performed on.
-     * @param pattern The pattern used to validate the value against, or the
-     *        default for the <code>Locale</code> if <code>null</code>.
-     * @param locale The locale to use for the date format, system default if null.
-     * @return The parsed <code>Double</code> if valid or <code>null</code> if invalid.
-     */
-    public Double validate(String value, String pattern, Locale locale) {
-        return (Double)parse(value, pattern, locale);
+    public boolean isInRange(final double value, final double min, final double max) {
+        return value >= min && value <= max;
     }
 
     /**
@@ -164,48 +126,23 @@ public class DoubleValidator extends AbstractNumberValidator {
      * @param value The <code>Number</code> value to check.
      * @param min The minimum value of the range.
      * @param max The maximum value of the range.
-     * @return <code>true</code> if the value is within the
+     * @return {@code true} if the value is within the
      *         specified range.
      */
-    public boolean isInRange(double value, double min, double max) {
-        return (value >= min && value <= max);
-    }
-
-    /**
-     * Check if the value is within a specified range.
-     *
-     * @param value The <code>Number</code> value to check.
-     * @param min The minimum value of the range.
-     * @param max The maximum value of the range.
-     * @return <code>true</code> if the value is within the
-     *         specified range.
-     */
-    public boolean isInRange(Double value, double min, double max) {
+    public boolean isInRange(final Double value, final double min, final double max) {
         return isInRange(value.doubleValue(), min, max);
     }
 
     /**
-     * Check if the value is greater than or equal to a minimum.
+     * Check if the value is less than or equal to a maximum.
      *
      * @param value The value validation is being performed on.
-     * @param min The minimum value.
-     * @return <code>true</code> if the value is greater than
-     *         or equal to the minimum.
+     * @param max The maximum value.
+     * @return {@code true} if the value is less than
+     *         or equal to the maximum.
      */
-    public boolean minValue(double value, double min) {
-        return (value >= min);
-    }
-
-    /**
-     * Check if the value is greater than or equal to a minimum.
-     *
-     * @param value The value validation is being performed on.
-     * @param min The minimum value.
-     * @return <code>true</code> if the value is greater than
-     *         or equal to the minimum.
-     */
-    public boolean minValue(Double value, double min) {
-        return minValue(value.doubleValue(), min);
+    public boolean maxValue(final double value, final double max) {
+        return value <= max;
     }
 
     /**
@@ -213,23 +150,35 @@ public class DoubleValidator extends AbstractNumberValidator {
      *
      * @param value The value validation is being performed on.
      * @param max The maximum value.
-     * @return <code>true</code> if the value is less than
+     * @return {@code true} if the value is less than
      *         or equal to the maximum.
      */
-    public boolean maxValue(double value, double max) {
-        return (value <= max);
-    }
-
-    /**
-     * Check if the value is less than or equal to a maximum.
-     *
-     * @param value The value validation is being performed on.
-     * @param max The maximum value.
-     * @return <code>true</code> if the value is less than
-     *         or equal to the maximum.
-     */
-    public boolean maxValue(Double value, double max) {
+    public boolean maxValue(final Double value, final double max) {
         return maxValue(value.doubleValue(), max);
+    }
+
+    /**
+     * Check if the value is greater than or equal to a minimum.
+     *
+     * @param value The value validation is being performed on.
+     * @param min The minimum value.
+     * @return {@code true} if the value is greater than
+     *         or equal to the minimum.
+     */
+    public boolean minValue(final double value, final double min) {
+        return value >= min;
+    }
+
+    /**
+     * Check if the value is greater than or equal to a minimum.
+     *
+     * @param value The value validation is being performed on.
+     * @param min The minimum value.
+     * @return {@code true} if the value is greater than
+     *         or equal to the minimum.
+     */
+    public boolean minValue(final Double value, final double min) {
+        return minValue(value.doubleValue(), min);
     }
 
     /**
@@ -238,15 +187,64 @@ public class DoubleValidator extends AbstractNumberValidator {
      * @param value The parsed <code>Number</code> object created.
      * @param formatter The Format used to parse the value with.
      * @return The validated/converted <code>Double</code> value if valid
-     * or <code>null</code> if invalid.
+     * or {@code null} if invalid.
      */
     @Override
-    protected Object processParsedValue(Object value, Format formatter) {
-
+    protected Object processParsedValue(final Object value, final Format formatter) {
         if (value instanceof Double) {
             return value;
         }
-        return new Double(((Number)value).doubleValue());
+        return Double.valueOf(((Number) value).doubleValue());
 
+    }
+
+    /**
+     * <p>Validate/convert a <code>Double</code> using the default
+     *    <code>Locale</code>.
+     *
+     * @param value The value validation is being performed on.
+     * @return The parsed <code>Double</code> if valid or {@code null}
+     *  if invalid.
+     */
+    public Double validate(final String value) {
+        return (Double) parse(value, (String) null, (Locale) null);
+    }
+
+    /**
+     * <p>Validate/convert a <code>Double</code> using the
+     *    specified <code>Locale</code>.
+     *
+     * @param value The value validation is being performed on.
+     * @param locale The locale to use for the number format, system default if null.
+     * @return The parsed <code>Double</code> if valid or {@code null} if invalid.
+     */
+    public Double validate(final String value, final Locale locale) {
+        return (Double) parse(value, (String) null, locale);
+    }
+
+    /**
+     * <p>Validate/convert a <code>Double</code> using the
+     *    specified <i>pattern</i>.
+     *
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against.
+     * @return The parsed <code>BigDecimal</code> if valid or {@code null} if invalid.
+     */
+    public Double validate(final String value, final String pattern) {
+        return (Double) parse(value, pattern, (Locale) null);
+    }
+
+    /**
+     * <p>Validate/convert a <code>Double</code> using the
+     *    specified pattern and/ or <code>Locale</code>.
+     *
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against, or the
+     *        default for the <code>Locale</code> if {@code null}.
+     * @param locale The locale to use for the date format, system default if null.
+     * @return The parsed <code>Double</code> if valid or {@code null} if invalid.
+     */
+    public Double validate(final String value, final String pattern, final Locale locale) {
+        return (Double) parse(value, pattern, locale);
     }
 }

@@ -18,12 +18,13 @@ package org.apache.commons.validator.routines.checkdigit;
 
 import java.util.Arrays;
 
+import org.apache.commons.validator.GenericValidator;
 import org.apache.commons.validator.routines.CodeValidator;
 
 /**
  * General Modulus 10 Check Digit calculation/validation.
  *
- * <h3>How if Works</h3>
+ * <h2>How it Works</h2>
  * <p>
  * This implementation calculates/validates the check digit in the following
  * way:
@@ -42,7 +43,7 @@ import org.apache.commons.validator.routines.CodeValidator;
  * <li>The <i>weighted values</i> of each character are totalled.</li>
  * <li>The total modulo 10 will be zero for a code with a valid Check Digit.</li>
  * </ul>
- * <h3>Limitations</h3>
+ * <h2>Limitations</h2>
  * <p>
  * This implementation has the following limitations:
  * <ul>
@@ -57,26 +58,26 @@ import org.apache.commons.validator.routines.CodeValidator;
  * <p>
  * <b>Note:</b> This implementation can be combined with the
  * {@link CodeValidator} in order to ensure the length and characters are valid.
- * 
- * <h3>Example Usage</h3>
+ *
+ * <h2>Example Usage</h2>
  * <p>
  * This implementation was added after a number of Modulus 10 routines and these
  * are shown re-implemented using this routine below:
- * 
+ *
  * <p>
  * <b>ABA Number</b> Check Digit Routine (equivalent of
  * {@link ABANumberCheckDigit}). Weighting factors are <code>[1, 7, 3]</code>
  * applied from right to left.
- * 
+ *
  * <pre>
  * CheckDigit routine = new ModulusTenCheckDigit(new int[] { 1, 7, 3 }, true);
  * </pre>
- * 
+ *
  * <p>
  * <b>CUSIP</b> Check Digit Routine (equivalent of {@link CUSIPCheckDigit}).
  * Weighting factors are <code>[1, 2]</code> applied from right to left and the
  * digits of the <i>weighted value</i> are summed.
- * 
+ *
  * <pre>
  * CheckDigit routine = new ModulusTenCheckDigit(new int[] { 1, 2 }, true, true);
  * </pre>
@@ -85,7 +86,7 @@ import org.apache.commons.validator.routines.CodeValidator;
  * <b>EAN-13 / UPC</b> Check Digit Routine (equivalent of
  * {@link EAN13CheckDigit}). Weighting factors are <code>[1, 3]</code> applied
  * from right to left.
- * 
+ *
  * <pre>
  * CheckDigit routine = new ModulusTenCheckDigit(new int[] { 1, 3 }, true);
  * </pre>
@@ -94,7 +95,7 @@ import org.apache.commons.validator.routines.CodeValidator;
  * <b>Luhn</b> Check Digit Routine (equivalent of {@link LuhnCheckDigit}).
  * Weighting factors are <code>[1, 2]</code> applied from right to left and the
  * digits of the <i>weighted value</i> are summed.
- * 
+ *
  * <pre>
  * CheckDigit routine = new ModulusTenCheckDigit(new int[] { 1, 2 }, true, true);
  * </pre>
@@ -103,60 +104,69 @@ import org.apache.commons.validator.routines.CodeValidator;
  * <b>SEDOL</b> Check Digit Routine (equivalent of {@link SedolCheckDigit}).
  * Weighting factors are <code>[1, 3, 1, 7, 3, 9, 1]</code> applied from left to
  * right.
- * 
+ *
  * <pre>
  * CheckDigit routine = new ModulusTenCheckDigit(new int[] { 1, 3, 1, 7, 3, 9, 1 });
  * </pre>
  *
- * @since Validator 1.6
- * @version $Revision: 1739356 $
+ * @since 1.6
  */
 public final class ModulusTenCheckDigit extends ModulusCheckDigit {
 
     private static final long serialVersionUID = -3752929983453368497L;
 
+    /**
+     * The weighted values to apply based on the character position
+     */
     private final int[] postitionWeight;
+
+    /**
+     * {@code true} if use positionWeights from right to left
+     */
     private final boolean useRightPos;
+
+    /**
+     * {@code true} if sum the digits of the weighted value
+     */
     private final boolean sumWeightedDigits;
 
     /**
-     * Construct a modulus 10 Check Digit routine with the specified weighting
+     * Constructs a modulus 10 Check Digit routine with the specified weighting
      * from left to right.
-     * 
+     *
      * @param postitionWeight the weighted values to apply based on the
      *            character position
      */
-    public ModulusTenCheckDigit(int[] postitionWeight) {
+    public ModulusTenCheckDigit(final int[] postitionWeight) {
         this(postitionWeight, false, false);
     }
 
     /**
-     * Construct a modulus 10 Check Digit routine with the specified weighting,
+     * Constructs a modulus 10 Check Digit routine with the specified weighting,
      * indicating whether its from the left or right.
-     * 
+     *
      * @param postitionWeight the weighted values to apply based on the
      *            character position
-     * @param useRightPos <code>true</code> if use positionWeights from right to
+     * @param useRightPos {@code true} if use positionWeights from right to
      *            left
      */
-    public ModulusTenCheckDigit(int[] postitionWeight, boolean useRightPos) {
+    public ModulusTenCheckDigit(final int[] postitionWeight, final boolean useRightPos) {
         this(postitionWeight, useRightPos, false);
     }
 
     /**
-     * Construct a modulus 10 Check Digit routine with the specified weighting,
+     * Constructs a modulus 10 Check Digit routine with the specified weighting,
      * indicating whether its from the left or right and whether the weighted
      * digits should be summed.
-     * 
+     *
      * @param postitionWeight the weighted values to apply based on the
      *            character position
-     * @param useRightPos <code>true</code> if use positionWeights from right to
+     * @param useRightPos {@code true} if use positionWeights from right to
      *            left
-     * @param sumWeightedDigits <code>true</code> if sum the digits of the
+     * @param sumWeightedDigits {@code true} if sum the digits of the
      *            weighted value
      */
-    public ModulusTenCheckDigit(int[] postitionWeight, boolean useRightPos, boolean sumWeightedDigits) {
-        super(10); // CHECKSTYLE IGNORE MagicNumber
+    public ModulusTenCheckDigit(final int[] postitionWeight, final boolean useRightPos, final boolean sumWeightedDigits) {
         this.postitionWeight = Arrays.copyOf(postitionWeight, postitionWeight.length);
         this.useRightPos = useRightPos;
         this.sumWeightedDigits = sumWeightedDigits;
@@ -168,18 +178,17 @@ public final class ModulusTenCheckDigit extends ModulusCheckDigit {
      * Note: assumes last digit is the check digit
      *
      * @param code The code to validate
-     * @return <code>true</code> if the check digit is valid, otherwise
-     *         <code>false</code>
+     * @return {@code true} if the check digit is valid, otherwise
+     *         {@code false}
      */
     @Override
-    public boolean isValid(String code) {
-        if (code == null || code.length() == 0) {
+    public boolean isValid(final String code) {
+        if (GenericValidator.isBlankOrNull(code)) {
             return false;
         }
         if (!Character.isDigit(code.charAt(code.length() - 1))) {
             return false;
         }
-
         return super.isValid(code);
     }
 
@@ -199,12 +208,23 @@ public final class ModulusTenCheckDigit extends ModulusCheckDigit {
      *             negative number
      */
     @Override
-    protected int toInt(char character, int leftPos, int rightPos) throws CheckDigitException {
-        int num = Character.getNumericValue(character);
+    protected int toInt(final char character, final int leftPos, final int rightPos) throws CheckDigitException {
+        final int num = Character.getNumericValue(character);
         if (num < 0) {
             throw new CheckDigitException("Invalid Character[" + leftPos + "] = '" + character + "'");
         }
         return num;
+    }
+
+    /**
+     * Return a string representation of this implementation.
+     *
+     * @return a string representation
+     */
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[postitionWeight=" + Arrays.toString(postitionWeight) + ", useRightPos="
+                + useRightPos + ", sumWeightedDigits=" + sumWeightedDigits + "]";
     }
 
     /**
@@ -219,25 +239,14 @@ public final class ModulusTenCheckDigit extends ModulusCheckDigit {
      * @return The weighted value of the character.
      */
     @Override
-    protected int weightedValue(int charValue, int leftPos, int rightPos) {
-        int pos = useRightPos ? rightPos : leftPos;
-        int weight = postitionWeight[(pos - 1) % postitionWeight.length];
+    protected int weightedValue(final int charValue, final int leftPos, final int rightPos) {
+        final int pos = useRightPos ? rightPos : leftPos;
+        final int weight = postitionWeight[(pos - 1) % postitionWeight.length];
         int weightedValue = charValue * weight;
         if (sumWeightedDigits) {
-            weightedValue = ModulusCheckDigit.sumDigits(weightedValue);
+            weightedValue = sumDigits(weightedValue);
         }
         return weightedValue;
-    }
-
-    /**
-     * Return a string representation of this implementation.
-     *
-     * @return a string representation
-     */
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "[postitionWeight=" + Arrays.toString(postitionWeight) + ", useRightPos="
-                + useRightPos + ", sumWeightedDigits=" + sumWeightedDigits + "]";
     }
 
 }

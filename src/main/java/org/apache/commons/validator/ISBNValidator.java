@@ -18,15 +18,14 @@ package org.apache.commons.validator;
 
 /**
  * A class for validating 10 digit ISBN codes.
- * Based on this 
+ * Based on this
  * <a href="http://www.isbn.org/standards/home/isbn/international/html/usm4.htm">
  * algorithm</a>
  *
  * <b>NOTE:</b> This has been replaced by the new
  *  {@link org.apache.commons.validator.routines.ISBNValidator}.
  *
- * @version $Revision: 1739358 $
- * @since Validator 1.2.0
+ * @since 1.2.0
  * @deprecated Use the new ISBNValidator in the routines package
  */
 @Deprecated
@@ -36,7 +35,6 @@ public class ISBNValidator {
      * Default Constructor.
      */
     public ISBNValidator() {
-        super();
     }
 
     /**
@@ -45,11 +43,11 @@ public class ISBNValidator {
      * divided by 11 according to the ISBN algorithm.  If the result is zero,
      * the ISBN is valid.  This method accepts formatted or raw ISBN codes.
      *
-     * @param isbn Candidate ISBN number to be validated. <code>null</code> is
+     * @param isbn Candidate ISBN number to be validated. {@code null} is
      * considered invalid.
      * @return true if the string is a valid ISBN code.
      */
-    public boolean isValid(String isbn) {
+    public boolean isValid(final String isbn) {
         return org.apache.commons.validator.routines.ISBNValidator.getInstance().isValidISBN10(isbn);
     }
 

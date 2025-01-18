@@ -16,52 +16,38 @@
  */
 package org.apache.commons.validator.routines.checkdigit;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * ModulusTenCheckDigit SEDOL Test.
- *
- * @version $Revision: 1748035 $
  */
 public class ModulusTenSedolCheckDigitTest extends AbstractCheckDigitTest {
 
-    /**
-     * Constructor
-     * @param name test name
-     */
-    public ModulusTenSedolCheckDigitTest(String name) {
-        super(name);
-    }
+    private static final String[] INVALID_CHECK_DIGITS = { "026349E", // proper check digit is '4', see above
+            "087061C", // proper check digit is '2', see above
+            "B06LQ9H", // proper check digit is '7', see above
+            "343757F", // proper check digit is '5', see above
+            "B07LF5F", // proper check digit is '5', see above
+    };
 
     /**
-     * Set up routine & valid codes.
+     * Sets up routine & valid codes.
      */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    protected void setUp() {
         routine = new ModulusTenCheckDigit(new int[] { 1, 3, 1, 7, 3, 9, 1 });
-        valid = new String[] {
-                "0263494",
-                "0870612",
-                "B06LQ97",
-                "3437575",
-                "B07LF55",
-                };
-        invalid = new String[] {"123#567"};
+        valid = new String[] { "0263494", "0870612", "B06LQ97", "3437575", "B07LF55", };
+        invalid = new String[] { "123#567" };
         zeroSum = "0000000";
     }
 
-    private static String invalidCheckDigits[] = {
-                "026349E", // proper check digit is '4', see above
-                "087061C", // proper check digit is '2', see above
-                "B06LQ9H", // proper check digit is '7', see above
-                "343757F", // proper check digit is '5', see above
-                "B07LF5F", // proper check digit is '5', see above
-               };
-
-    public void testVALIDATOR_346() {
-        for (int i = 0; i < invalidCheckDigits.length; i++) {
-            String invalidCheckDigit = invalidCheckDigits[i];
-            assertFalse("Should fail: " + invalidCheckDigit, routine.isValid(invalidCheckDigit));
+    @Test
+    public void testValidator346() {
+        for (final String invalidCheckDigit : INVALID_CHECK_DIGITS) {
+            assertFalse(routine.isValid(invalidCheckDigit), () -> "Should fail: " + invalidCheckDigit);
         }
     }
 

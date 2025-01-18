@@ -16,39 +16,35 @@
  */
 package org.apache.commons.validator;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.util.Locale;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 /**
  * Abstracts date unit tests methods.
- *
- * @version $Revision: 1739356 $
  */
 public class DateTest extends AbstractCommonTest {
-    
+
     /**
-     * The key used to retrieve the set of validation
-     * rules from the xml file.
+     * The key used to retrieve the set of validation rules from the xml file.
      */
-    protected String FORM_KEY = "dateForm";
-    
+    protected static final String FORM_KEY = "dateForm";
+
     /**
      * The key used to retrieve the validator action.
      */
-    protected String ACTION = "date";
+    protected static final String ACTION = "date";
 
-
-    public DateTest(String name) {
-        super(name);
-    }
-    
     /**
-     * Load <code>ValidatorResources</code> from 
-     * validator-numeric.xml.
+     * Load <code>ValidatorResources</code> from validator-numeric.xml.
      */
-    @Override
+    @BeforeEach
     protected void setUp() throws IOException, SAXException {
         // Load resources
         loadResources("DateTest-config.xml");
@@ -57,56 +53,55 @@ public class DateTest extends AbstractCommonTest {
     /**
      * Tests the date validation.
      */
-    public void testValidDate() throws ValidatorException {
+    @Test
+    public void testInvalidDate() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
-        info.setValue("12/01/2005");
-        valueTest(info, true);
+        final ValueBean info = new ValueBean();
+        info.setValue("12/01as/2005");
+        valueTest(info, false);
     }
 
     /**
      * Tests the date validation.
      */
-    public void testInvalidDate() throws ValidatorException {
+    @Test
+    public void testValidDate() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
-        info.setValue("12/01as/2005");
-        valueTest(info, false);
+        final ValueBean info = new ValueBean();
+        info.setValue("12/01/2005");
+        valueTest(info, true);
     }
 
-    
     /**
      * Utlity class to run a test on a value.
      *
-     * @param    info    Value to run test on.
-     * @param    passed    Whether or not the test is expected to pass.
+     * @param info   Value to run test on.
+     * @param passed Whether or not the test is expected to pass.
      */
-    protected void valueTest(Object info, boolean passed) throws ValidatorException {
+    protected void valueTest(final Object info, final boolean passed) throws ValidatorException {
         // Construct validator based on the loaded resources
         // and the form key
-        Validator validator = new Validator(resources, FORM_KEY);
+        final Validator validator = new Validator(resources, FORM_KEY);
         // add the name bean to the validator as a resource
         // for the validations to be performed on.
         validator.setParameter(Validator.BEAN_PARAM, info);
         validator.setParameter(Validator.LOCALE_PARAM, Locale.US);
 
         // Get results of the validation.
-        ValidatorResults results = null;
-
         // throws ValidatorException,
         // but we aren't catching for testing
         // since no validation methods we use
         // throw this
-        results = validator.validate();
+        final ValidatorResults results = validator.validate();
 
-        assertNotNull("Results are null.", results);
+        assertNotNull(results, "Results are null.");
 
-        ValidatorResult result = results.getValidatorResult("value");
+        final ValidatorResult result = results.getValidatorResult("value");
 
-        assertNotNull(ACTION + " value ValidatorResult should not be null.", result);
-        assertTrue(ACTION + " value ValidatorResult should contain the '" + ACTION + "' action.", result.containsAction(ACTION));
-        assertTrue(ACTION + " value ValidatorResult for the '" + ACTION + "' action should have " + (passed ? "passed" : "failed") + ".", (passed ? result.isValid(ACTION) : !result.isValid(ACTION)));
+        assertNotNull(result, () -> ACTION + " value ValidatorResult should not be null.");
+        assertTrue(result.containsAction(ACTION), () -> ACTION + " value ValidatorResult should contain the '" + ACTION + "' action.");
+        assertTrue(passed ? result.isValid(ACTION) : !result.isValid(ACTION),
+                () -> ACTION + " value ValidatorResult for the '" + ACTION + "' action should have " + (passed ? "passed" : "failed") + ".");
     }
-
 
 }
