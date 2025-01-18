@@ -20,8 +20,6 @@ package org.apache.commons.validator;
  * The base exception for the Validator Framework.  All other
  * <code>Exception</code>s thrown during calls to
  * <code>Validator.validate()</code> are considered errors.
- *
- * @version $Revision: 1649191 $
  */
 public class ValidatorException extends Exception {
 
@@ -31,7 +29,6 @@ public class ValidatorException extends Exception {
      * Constructs an Exception with no specified detail message.
      */
     public ValidatorException() {
-        super();
     }
 
     /**
@@ -39,7 +36,7 @@ public class ValidatorException extends Exception {
      *
      * @param    message The error message.
      */
-    public ValidatorException(String message) {
+    public ValidatorException(final String message) {
         super(message);
     }
 

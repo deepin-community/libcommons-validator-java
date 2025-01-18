@@ -16,26 +16,18 @@
  */
 package org.apache.commons.validator;
 
-/**                                                       
+/**
  * Contains validation methods for different unit tests.
- *
- * @version $Revision: 1649191 $
- */                                                       
+ */
 public class ParameterValidatorImpl {
 
     /**
      * ValidatorParameter is valid.
-     * 
      */
-    public static boolean validateParameter(
-        final java.lang.Object bean,
-        final org.apache.commons.validator.Form form,
-        final org.apache.commons.validator.Field field,
-        final org.apache.commons.validator.Validator validator,
-        final org.apache.commons.validator.ValidatorAction action,
-        final org.apache.commons.validator.ValidatorResults results,
-        final java.util.Locale locale)
-        throws Exception {
+    public static boolean validateParameter(final java.lang.Object bean, final org.apache.commons.validator.Form form,
+            final org.apache.commons.validator.Field field, final org.apache.commons.validator.Validator validator,
+            final org.apache.commons.validator.ValidatorAction action, final org.apache.commons.validator.ValidatorResults results,
+            final java.util.Locale locale) throws Exception {
 
         return true;
     }

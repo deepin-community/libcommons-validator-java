@@ -16,41 +16,39 @@
  */
 package org.apache.commons.validator;
 
-/**                                                       
- * Value object that contains a first name and last name. 
- *
- * @version $Revision: 1649191 $
+/**
+ * Value object that contains a first name and last name.
  */
 public class NameBean {
 
-    protected String firstName = null;
+    protected String firstName;
 
-    protected String middleName = null;
+    protected String middleName;
 
-    protected String lastName = null;
+    protected String lastName;
 
     public String getFirstName() {
         return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setFirstName(final String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(final String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setMiddleName(final String middleName) {
+        this.middleName = middleName;
     }
 
 }

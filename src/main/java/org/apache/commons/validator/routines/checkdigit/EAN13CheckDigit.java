@@ -27,18 +27,17 @@ package org.apache.commons.validator.routines.checkdigit;
  * For further information see:
  * <ul>
  *   <li>EAN-13 - see
- *       <a href="http://en.wikipedia.org/wiki/European_Article_Number">Wikipedia -
+ *       <a href="https://en.wikipedia.org/wiki/European_Article_Number">Wikipedia -
  *       European Article Number</a>.</li>
  *   <li>UPC - see
- *       <a href="http://en.wikipedia.org/wiki/Universal_Product_Code">Wikipedia -
+ *       <a href="https://en.wikipedia.org/wiki/Universal_Product_Code">Wikipedia -
  *       Universal Product Code</a>.</li>
  *   <li>ISBN-13 - see
- *       <a href="http://en.wikipedia.org/wiki/ISBN">Wikipedia - International
+ *       <a href="https://en.wikipedia.org/wiki/ISBN">Wikipedia - International
  *       Standard Book Number (ISBN)</a>.</li>
  * </ul>
  *
- * @version $Revision: 1739356 $
- * @since Validator 1.4
+ * @since 1.4
  */
 public final class EAN13CheckDigit extends ModulusCheckDigit {
 
@@ -47,14 +46,13 @@ public final class EAN13CheckDigit extends ModulusCheckDigit {
     /** Singleton EAN-13 Check Digit instance */
     public static final CheckDigit EAN13_CHECK_DIGIT = new EAN13CheckDigit();
 
-    /** weighting given to digits depending on their right position */
-    private static final int[] POSITION_WEIGHT = new int[] {3, 1};
+    /** Weighting given to digits depending on their right position */
+    private static final int[] POSITION_WEIGHT = {3, 1};
 
     /**
-     * Construct a modulus 10 Check Digit routine for EAN/UPC.
+     * Constructs a modulus 10 Check Digit routine for EAN/UPC.
      */
     public EAN13CheckDigit() {
-        super(10);  // CHECKSTYLE IGNORE MagicNumber
     }
 
     /**
@@ -71,8 +69,7 @@ public final class EAN13CheckDigit extends ModulusCheckDigit {
      * @return The weighted value of the character.
      */
     @Override
-    protected int weightedValue(int charValue, int leftPos, int rightPos) {
-        int weight = POSITION_WEIGHT[rightPos % 2];
-        return charValue * weight;
+    protected int weightedValue(final int charValue, final int leftPos, final int rightPos) {
+        return charValue * POSITION_WEIGHT[rightPos % 2];
     }
 }

@@ -19,8 +19,6 @@
 <!--
     digester-rules.xml defines the rules our Digester will use to transform 
     validation.xml files into Java objects.
-    
-    $Id: digester-rules.xml 1640268 2014-11-18 02:21:38Z sebb $
 -->
 
 

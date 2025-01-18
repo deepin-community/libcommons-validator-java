@@ -16,11 +16,13 @@
  */
 package org.apache.commons.validator.routines;
 
+import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.Format;
 import java.text.NumberFormat;
-import java.text.DecimalFormat;
 import java.util.Locale;
+
+import org.apache.commons.validator.GenericValidator;
 
 /**
  * <p>Abstract class for Number Validation.</p>
@@ -28,8 +30,7 @@ import java.util.Locale;
  * <p>This is a <i>base</i> class for building Number
  *    Validators using format parsing.</p>
  *
- * @version $Revision: 1739356 $
- * @since Validator 1.3.0
+ * @since 1.3.0
  */
 public abstract class AbstractNumberValidator extends AbstractFormatValidator {
 
@@ -42,166 +43,33 @@ public abstract class AbstractNumberValidator extends AbstractFormatValidator {
     public static final int CURRENCY_FORMAT = 1;
 
     /** Percent <code>NumberFormat</code> type */
-    public static final int PERCENT_FORMAT  = 2;
-
-    private final boolean allowFractions;
-    private final int     formatType;
+    public static final int PERCENT_FORMAT = 2;
 
     /**
-     * Construct an instance with specified <i>strict</i>
+     * {@code true} if fractions are allowed or {@code false} if integers only.
+     */
+    private final boolean allowFractions;
+
+    /**
+     * The <code>NumberFormat</code> type to create for validation, default is STANDARD_FORMAT.
+     */
+    private final int formatType;
+
+    /**
+     * Constructs an instance with specified <i>strict</i>
      * and <i>decimal</i> parameters.
      *
-     * @param strict <code>true</code> if strict
+     * @param strict {@code true} if strict
      *        <code>Format</code> parsing should be used.
      * @param formatType The <code>NumberFormat</code> type to
      *        create for validation, default is STANDARD_FORMAT.
-     * @param allowFractions <code>true</code> if fractions are
-     *        allowed or <code>false</code> if integers only.
+     * @param allowFractions {@code true} if fractions are
+     *        allowed or {@code false} if integers only.
      */
-    public AbstractNumberValidator(boolean strict, int formatType, boolean allowFractions) {
+    public AbstractNumberValidator(final boolean strict, final int formatType, final boolean allowFractions) {
         super(strict);
         this.allowFractions = allowFractions;
         this.formatType = formatType;
-    }
-
-    /**
-     * <p>Indicates whether the number being validated is
-     *    a decimal or integer.</p>
-     *
-     * @return <code>true</code> if decimals are allowed
-     *       or <code>false</code> if the number is an integer.
-     */
-    public boolean isAllowFractions() {
-        return allowFractions;
-    }
-
-    /**
-     * <p>Indicates the type of <code>NumberFormat</code> created
-     *    by this validator instance.</p>
-     *
-     * @return the format type created.
-     */
-    public int getFormatType() {
-        return formatType;
-    }
-
-    /**
-     * <p>Validate using the specified <code>Locale</code>.</p>
-     *
-     * @param value The value validation is being performed on.
-     * @param pattern The pattern used to validate the value against, or the
-     *        default for the <code>Locale</code> if <code>null</code>.
-     * @param locale The locale to use for the date format, system default if null.
-     * @return <code>true</code> if the value is valid.
-     */
-    @Override
-    public boolean isValid(String value, String pattern, Locale locale) {
-        Object parsedValue = parse(value, pattern, locale);
-        return (parsedValue == null ? false : true);
-    }
-
-    /**
-     * Check if the value is within a specified range.
-     *
-     * @param value The value validation is being performed on.
-     * @param min The minimum value of the range.
-     * @param max The maximum value of the range.
-     * @return <code>true</code> if the value is within the
-     *         specified range.
-     */
-    public boolean isInRange(Number value, Number min, Number max) {
-        return (minValue(value, min) && maxValue(value, max));
-    }
-
-    /**
-     * Check if the value is greater than or equal to a minimum.
-     *
-     * @param value The value validation is being performed on.
-     * @param min The minimum value.
-     * @return <code>true</code> if the value is greater than
-     *         or equal to the minimum.
-     */
-    public boolean minValue(Number value, Number min) {
-        if (isAllowFractions()) {
-            return (value.doubleValue() >= min.doubleValue());
-        }
-        return (value.longValue() >= min.longValue());
-    }
-
-    /**
-     * Check if the value is less than or equal to a maximum.
-     *
-     * @param value The value validation is being performed on.
-     * @param max The maximum value.
-     * @return <code>true</code> if the value is less than
-     *         or equal to the maximum.
-     */
-    public boolean maxValue(Number value, Number max) {
-        if (isAllowFractions()) {
-            return (value.doubleValue() <= max.doubleValue());
-        }
-        return (value.longValue() <= max.longValue());
-    }
-
-    /**
-     * <p>Parse the value using the specified pattern.</p>
-     *
-     * @param value The value validation is being performed on.
-     * @param pattern The pattern used to validate the value against, or the
-     *        default for the <code>Locale</code> if <code>null</code>.
-     * @param locale The locale to use for the date format, system default if null.
-     * @return The parsed value if valid or <code>null</code> if invalid.
-     */
-    protected Object parse(String value, String pattern, Locale locale) {
-
-        value = (value == null ? null : value.trim());
-        if (value == null || value.length() == 0) {
-            return null;
-        }
-        Format formatter = getFormat(pattern, locale);
-        return parse(value, formatter);
-
-    }
-
-    /**
-     * <p>Process the parsed value, performing any further validation
-     *    and type conversion required.</p>
-     *
-     * @param value The parsed object created.
-     * @param formatter The Format used to parse the value with.
-     * @return The parsed value converted to the appropriate type
-     *         if valid or <code>null</code> if invalid.
-     */
-    @Override
-    protected abstract Object processParsedValue(Object value, Format formatter);
-
-    /**
-     * <p>Returns a <code>NumberFormat</code> for the specified <i>pattern</i>
-     *    and/or <code>Locale</code>.</p>
-     *
-     * @param pattern The pattern used to validate the value against or
-     *        <code>null</code> to use the default for the <code>Locale</code>.
-     * @param locale The locale to use for the currency format, system default if null.
-     * @return The <code>NumberFormat</code> to created.
-     */
-    @Override
-    protected Format getFormat(String pattern, Locale locale) {
-
-        NumberFormat formatter = null;
-        boolean usePattern = (pattern != null && pattern.length() > 0);
-        if (!usePattern) {
-            formatter = (NumberFormat)getFormat(locale);
-        } else if (locale == null) {
-            formatter =  new DecimalFormat(pattern);
-        } else {
-            DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
-            formatter = new DecimalFormat(pattern, symbols);
-        }
-
-        if (determineScale(formatter) == 0) {
-            formatter.setParseIntegerOnly(true);
-        }
-        return formatter;
     }
 
     /**
@@ -211,21 +79,21 @@ public abstract class AbstractNumberValidator extends AbstractFormatValidator {
      *        multiplier of.
      * @return The multiplying factor for the format..
      */
-    protected int determineScale(NumberFormat format) {
+    protected int determineScale(final NumberFormat format) {
         if (!isStrict()) {
             return -1;
         }
         if (!isAllowFractions() || format.isParseIntegerOnly()) {
             return 0;
         }
-        int minimumFraction = format.getMinimumFractionDigits();
-        int maximumFraction = format.getMaximumFractionDigits();
+        final int minimumFraction = format.getMinimumFractionDigits();
+        final int maximumFraction = format.getMaximumFractionDigits();
         if (minimumFraction != maximumFraction) {
             return -1;
         }
         int scale = minimumFraction;
         if (format instanceof DecimalFormat) {
-            int multiplier = ((DecimalFormat)format).getMultiplier();
+            final int multiplier = ((DecimalFormat) format).getMultiplier();
             if (multiplier == 100) { // CHECKSTYLE IGNORE MagicNumber
                 scale += 2; // CHECKSTYLE IGNORE MagicNumber
             } else if (multiplier == 1000) { // CHECKSTYLE IGNORE MagicNumber
@@ -244,8 +112,8 @@ public abstract class AbstractNumberValidator extends AbstractFormatValidator {
      *   system default if null.
      * @return The <code>NumberFormat</code> to created.
      */
-    protected Format getFormat(Locale locale) {
-        NumberFormat formatter = null;
+    protected Format getFormat(final Locale locale) {
+        NumberFormat formatter;
         switch (formatType) {
         case CURRENCY_FORMAT:
             if (locale == null) {
@@ -267,8 +135,150 @@ public abstract class AbstractNumberValidator extends AbstractFormatValidator {
             } else {
                 formatter = NumberFormat.getInstance(locale);
             }
+            if (!isAllowFractions()) {
+                formatter.setParseIntegerOnly(true);
+            }
             break;
         }
         return formatter;
     }
+
+    /**
+     * <p>Returns a <code>NumberFormat</code> for the specified <i>pattern</i>
+     *    and/or <code>Locale</code>.</p>
+     *
+     * @param pattern The pattern used to validate the value against or
+     *        {@code null} to use the default for the <code>Locale</code>.
+     * @param locale The locale to use for the currency format, system default if null.
+     * @return The <code>NumberFormat</code> to created.
+     */
+    @Override
+    protected Format getFormat(final String pattern, final Locale locale) {
+
+        NumberFormat formatter;
+        final boolean usePattern = !GenericValidator.isBlankOrNull(pattern);
+        if (!usePattern) {
+            formatter = (NumberFormat) getFormat(locale);
+        } else if (locale == null) {
+            formatter = new DecimalFormat(pattern);
+        } else {
+            final DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
+            formatter = new DecimalFormat(pattern, symbols);
+        }
+
+        if (!isAllowFractions()) {
+            formatter.setParseIntegerOnly(true);
+        }
+        return formatter;
+    }
+
+    /**
+     * <p>Indicates the type of <code>NumberFormat</code> created
+     *    by this validator instance.</p>
+     *
+     * @return the format type created.
+     */
+    public int getFormatType() {
+        return formatType;
+    }
+
+    /**
+     * <p>Indicates whether the number being validated is
+     *    a decimal or integer.</p>
+     *
+     * @return {@code true} if decimals are allowed
+     *       or {@code false} if the number is an integer.
+     */
+    public boolean isAllowFractions() {
+        return allowFractions;
+    }
+
+    /**
+     * Check if the value is within a specified range.
+     *
+     * @param value The value validation is being performed on.
+     * @param min The minimum value of the range.
+     * @param max The maximum value of the range.
+     * @return {@code true} if the value is within the
+     *         specified range.
+     */
+    public boolean isInRange(final Number value, final Number min, final Number max) {
+        return minValue(value, min) && maxValue(value, max);
+    }
+
+    /**
+     * <p>Validate using the specified <code>Locale</code>.</p>
+     *
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against, or the
+     *        default for the <code>Locale</code> if {@code null}.
+     * @param locale The locale to use for the date format, system default if null.
+     * @return {@code true} if the value is valid.
+     */
+    @Override
+    public boolean isValid(final String value, final String pattern, final Locale locale) {
+        return parse(value, pattern, locale) != null;
+    }
+
+    /**
+     * Check if the value is less than or equal to a maximum.
+     *
+     * @param value The value validation is being performed on.
+     * @param max The maximum value.
+     * @return {@code true} if the value is less than
+     *         or equal to the maximum.
+     */
+    public boolean maxValue(final Number value, final Number max) {
+        if (isAllowFractions()) {
+            return value.doubleValue() <= max.doubleValue();
+        }
+        return value.longValue() <= max.longValue();
+    }
+
+    /**
+     * Check if the value is greater than or equal to a minimum.
+     *
+     * @param value The value validation is being performed on.
+     * @param min The minimum value.
+     * @return {@code true} if the value is greater than
+     *         or equal to the minimum.
+     */
+    public boolean minValue(final Number value, final Number min) {
+        if (isAllowFractions()) {
+            return value.doubleValue() >= min.doubleValue();
+        }
+        return value.longValue() >= min.longValue();
+    }
+
+    /**
+     * <p>Parse the value using the specified pattern.</p>
+     *
+     * @param value The value validation is being performed on.
+     * @param pattern The pattern used to validate the value against, or the
+     *        default for the <code>Locale</code> if {@code null}.
+     * @param locale The locale to use for the date format, system default if null.
+     * @return The parsed value if valid or {@code null} if invalid.
+     */
+    protected Object parse(String value, final String pattern, final Locale locale) {
+        value = value == null ? null : value.trim();
+        final String value1 = value;
+        if (GenericValidator.isBlankOrNull(value1)) {
+            return null;
+        }
+        final Format formatter = getFormat(pattern, locale);
+        return parse(value, formatter);
+
+    }
+
+    /**
+     * <p>Process the parsed value, performing any further validation
+     *    and type conversion required.</p>
+     *
+     * @param value The parsed object created.
+     * @param formatter The Format used to parse the value with.
+     * @return The parsed value converted to the appropriate type
+     *         if valid or {@code null} if invalid.
+     */
+    @Override
+    protected abstract Object processParsedValue(Object value, Format formatter);
 }

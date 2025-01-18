@@ -16,55 +16,51 @@
  */
 package org.apache.commons.validator;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.InputStream;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test custom ValidatorResources.
- *
- * @version $Revision: 1739356 $
  */
-public class CustomValidatorResourcesTest extends TestCase {
-    
-    /**
-     * Construct a test case with the specified name.
-     * @param name Name of the test
-     */
-    public CustomValidatorResourcesTest(String name) {
-        super(name);
-    }
+public class CustomValidatorResourcesTest {
 
     /**
-     * Set up.
+     * Sets up.
      */
-    @Override
+    @BeforeEach
     protected void setUp() {
     }
 
     /**
      * Tear Down
      */
-    @Override
+    @AfterEach
     protected void tearDown() {
     }
 
     /**
      * Test creating a custom validator resources.
      */
+    @Test
     public void testCustomResources() {
         // Load resources
         InputStream in = null;
         try {
             in = this.getClass().getResourceAsStream("TestNumber-config.xml");
-        } catch(Exception e) {
+        } catch (final Exception e) {
             fail("Error loading resources: " + e);
         } finally {
             try {
                 if (in != null) {
                     in.close();
                 }
-            } catch(Exception e) {
+            } catch (final Exception ignore) {
+                // ignore
             }
         }
     }

@@ -64,7 +64,260 @@ The <action> type attribute can be add,update,fix,remove.
      -->
 
   <body>
-  <release version="1.6" date="2017-02-20" description="
+  <release version="1.9.0" date="2024-05-25" description="This is a maintenance and bug fix release; requires Java 8.">
+    <!-- ADD -->
+    <action type="add" dev="sebb" due-to="homebeaver">IBANValidator: #209 - add Falkland Islands, Mongolia, Nicaragua, Oman, Somalia</action>
+    <action type="add" dev="ggregory" due-to="ashoknan2, Gary Gregory">ISINValidator: Add 9 additional exception country code #129.</action>
+    <action type="add" dev="ggregory" due-to="Gary Gregory">ISINValidator: Add all codes from ISO 3166-1 alpha-2 except unassigned code elements.</action>
+    <action type="add" dev="ggregory" due-to="homebeaver, Gary Gregory">Add validator CASNumberCheckDigit for Chemical Registry CAS Numbers and ECNumberCheckDigit #217.</action>   
+    <action type="add" dev="ggregory" due-to="Gary Gregory">Add PMD check to default Maven goal.</action>
+    <!-- FIX -->
+    <action type="fix" issue="VALIDATOR-492" dev="ggregory" due-to="Tobias Wildgruber, Gary Gregory">ValidatorUtils.copyFastHashMap is broken.</action>
+    <action type="fix" dev="ggregory" due-to="Sebb">DomainValidator: Changes from Version 2024040200, Apr 2 07:07:02 2024 UTC.</action>
+    <action type="fix" dev="ggregory" due-to="Gary GRegory">Fix PMD UnnecessaryFullyQualifiedName.</action>    
+    <!-- UPDATE -->
+    <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">Bump org.apache.commons:commons-parent from 65 to 70 #201.</action>
+    <action type="update" dev="ggregory" due-to="Dependabot">Bump commons-logging:commons-logging from 1.3.0 to 1.3.2 #199, #221.</action>
+    <action type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.commons:commons-csv from 1.10.0 to 1.11.0 #214.</action>
+  </release>
+  <release version="1.8.0" date="2023-12-02" description="Maintenance and bug fix release.">
+    <!-- FIX -->
+    <action type="fix" dev="ggregory" due-to="Gennaro Napolitano">
+      Update Javadoc for InetAddressValidator isValid #76
+    </action>
+    <action issue ="VALIDATOR-479" type="fix" dev="ggregory" due-to="Gyoo">
+      Fix typo in /routines/package-summary.html #79.
+    </action>
+    <action type="fix" dev="ggregory" due-to="John Patrick">
+      Use JUnit 5 assertThrows() #92, #93, #94, #95.
+    </action>
+    <action type="fix" dev="ggregory" due-to="step-security-bot, Gary Gregory">
+      [StepSecurity] ci: Harden GitHub Actions #136.
+    </action>
+    <action type="fix" dev="ggregory" due-to="Andrés Torres">
+      Javadoc typos #144.
+    </action>
+    <action type="fix" dev="ggregory" due-to="Gary Gregory">
+      Precompile regular expression in InetAddressValidator.isValidInet6Address(String).
+    </action>
+    <action type="fix" dev="ggregory" due-to="Gary Gregory">
+      Fix SpotBugs [ERROR] Medium: Class org.apache.commons.validator.routines.CreditCardValidator$1 defines non-transient non-serializable instance field ccr [org.apache.commons.validator.routines.CreditCardValidator$1] In CreditCardValidator.java SE_BAD_FIELD.
+    </action>
+    <action type="fix" dev="ggregory" due-to="Gary Gregory">
+      Fix SpotBugs [ERROR] High: Class org.apache.commons.validator.ValidatorAction defines non-transient non-serializable instance field validationMethod [org.apache.commons.validator.ValidatorAction] In ValidatorAction.java SE_BAD_FIELD.
+    </action>
+    <action type="fix" dev="ggregory" due-to="Gary Gregory">
+      Fix SpotBugs [ERROR] High: Found reliance on default encoding in org.apache.commons.validator.ValidatorAction.readJavascriptFile(String): new java.io.InputStreamReader(InputStream) [org.apache.commons.validator.ValidatorAction] At ValidatorAction.java:[line 428] DM_DEFAULT_ENCODING.
+    </action>
+    <action type="fix" dev="ggregory" due-to="Gary Gregory">
+      Fix SpotBugs [ERROR] Medium: Inconsistent synchronization of org.apache.commons.validator.ValidatorAction.jsFunction; locked 62% of time [org.apache.commons.validator.ValidatorAction, org.apache.commons.validator.ValidatorAction, org.apache.commons.validator.ValidatorAction, org.apache.commons.validator.ValidatorAction, org.apache.commons.validator.ValidatorAction, org.apache.commons.validator.ValidatorAction, org.apache.commons.validator.ValidatorAction] Unsynchronized access at ValidatorAction.java:[line 340]Unsynchronized access at ValidatorAction.java:[line 358]Synchronized access at ValidatorAction.java:[line 393]Synchronized access at ValidatorAction.java:[line 394]Synchronized access at ValidatorAction.java:[line 459]Synchronized access at ValidatorAction.java:[line 461]Synchronized access at ValidatorAction.java:[line 462] IS2_INCONSISTENT_SYNC.
+    </action>
+    <action type="fix" dev="ggregory" due-to="Gary Gregory">
+      Port tests to JUnit 5. Exception: DomainValidatorStartupTest.
+    </action>
+    <action type="fix" dev="ggregory" due-to="Gary Gregory">
+      Use singletons in org.apache.commons.validator.CreditCardValidator.
+    </action>
+    <!-- ADD -->
+    <action type="add" dev="ggregory" due-to="Dependabot, Gary Gregory">
+      Add github/codeql-action.
+    </action>
+    <action issue="VALIDATOR-477" type="adda" dev="sebb" due-to="sebb, homebeaver">
+      Add IBAN validators for LY – Libya, SD, BI, #67.
+    </action>
+    <action issue="VALIDATOR-486" type="add" dev="ggregory" due-to="tatiana-scda, Gary Gregory">
+      Add new countries to IBAN list: DJ, RU #88.
+    </action>
+    <action type="add" dev="ggregory" due-to="Arnaud Fournier, Gary Gregory">
+      Add IBANValidator.Validator.getRegexValidator().
+    </action>
+    <action type="add" dev="ggregory" due-to="Arnaud Fournier, Gary Gregory">
+      Add RegexValidator.getPatterns().
+    </action>
+    <action type="add" dev="ggregory" due-to="Gary Gregory, rossmills3, sebbASF">
+      Add country codes listed as other countries and territories in the IBAN registry for Finland: AX.
+    </action>
+    <action type="add" dev="ggregory" due-to="Gary Gregory, rossmills3, sebbASF">
+      Add country codes listed as other countries and territories in the IBAN registry for France: GF, GP, MQ, RE, PF, TF, YT, NC, BL, MF, PM, WF.
+    </action>
+    <action type="add" dev="ggregory" due-to="Gary Gregory, rossmills3, sebbASF">
+      Add country codes listed as other countries and territories in the IBAN registry for United Kingdom: IM, JE, GG.
+    </action>
+    <action type="add" dev="ggregory" due-to="Gary Gregory">
+      Add ValidatorAction.setClassName(String) and deprecate setClassname(String). 
+    </action>
+    <!-- REMOVE -->
+    <action type="remove" dev="ggregory" due-to="John Patrick, Gary Gregory">
+      Remove FindBugs, SpotBugs is in use #87.
+    </action>
+    <!-- UPDATE -->
+    <action type="update" dev="ggregory" due-to="Gary Gregory">
+      Bump Java from 7 to 8.
+    </action>
+    <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+      Bump actions/cache from 2 to 3.0.11 #71, #84. #90, #91.
+    </action>
+    <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+      Bump actions/checkout from 2.3.1 to 3.0.2, #38, #47, #70.
+    </action>
+    <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+      Bump actions/setup-java from 1.4.0 to 3.6.0 #42, #72, #98.
+    </action>
+    <action type="update" dev="ggregory" due-to="Dependabot">
+      Bump actions/upload-artifact from 3.1.0 to 3.1.1 #96.
+    </action>
+    <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+      Bump junit from 4.13 to 5.9.1 Vintage #44.
+    </action>
+    <action type="update" dev="ggregory" due-to="Dependabot">
+      Bump maven-pmd-plugin from 3.13.0 to 3.19.0 #69, #77, #80, #81.
+    </action>
+    <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
+      Bump commons-parent from 52 to 65 #83, #107, #111, #132.
+    </action>
+    <action type="update" dev="ggregory" due-to="Gary Gregory">
+      Bump japicmp-maven-plugin from 0.15.3 to 0.15.7.
+    </action>
+    <action type="update" dev="ggregory" due-to="Dependabot">
+      Bump maven-antrun-plugin from 3.0.0 to 3.1.0 #74.
+    </action>
+    <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
+      Bump commons-csv from 1.6 to 1.10.0 #118.
+    </action>
+    <action type="update" dev="ggregory" due-to="Gary Gregory">
+      Bump japicmp-maven-plugin from 0.15.7 to 0.16.0.
+    </action>
+    <action dev="ggregory" type="update" due-to="Gary Gregory">
+      Bump commons-logging:commons-logging from 1.2 to 1.3.0.
+    </action>
+  </release>
+  
+  <release version="1.7" date="2020-08-07" description="
+This is primarily a maintenance release.
+
+All projects are encouraged to update to this release of
+Apache Commons Validator.
+
+  Commons Validator requires Java 7 or later.
+
+
+ Main enhancements
+ =================
+
+
+ * CreditCard validation specification by numeric range
+ * DomainValidator instances can be created with instance overrides
+ * DomainValidator supports overrides of LOCAL TLDs
+
+
+ IMPORTANT NOTES
+ ===============
+
+
+ BREAKING CHANGES:
+
+
+ * Now requires Java 7
+ * N.B. Java 9 changed the way Locales are handled. This affects the output from some Date-related methods, and may cause some tests to break.
+
+
+ DEPENDENCIES
+ ============
+
+
+ * Updates Apache Commons BeanUtils dependency from 1.9.2 to 1.9.4.
+  This picks up BEANUTILS-482: Update commons-collections from 3.2.1 to 3.2.2 (CVE-2015-4852).
+
+  For the current list of dependencies, please see
+http://commons.apache.org/validator/dependencies.html
+  ">
+    <action type="update" dev="sebb">
+    Drop Clirr and Cobertura in favour of JApiCmp and JaCoCo
+    </action>
+    <action issue="VALIDATOR-474" type="add" dev="sebb">
+    DomainValidator should allow local overrides
+    </action>
+    <action issue="VALIDATOR-473" type="add" dev="sebb">
+    Allow Email- and UrlValidator to use specified DomainValidator
+    </action>
+    <action issue="VALIDATOR-403" type="fix" dev="sebb" due-to="Tanya">
+    Accept Discover cards of 17 digits long that start with 6011
+    </action>
+    <action issue="VALIDATOR-408" type="fix" dev="sebb" due-to="Raj Vaida">
+    DISCOVER Card Validation Patterns
+    </action>
+    <action issue="VALIDATOR-472" type="fix" dev="sebb">
+    UrlValidator should not be more lax than java.net.URI
+    </action>
+    <action issue="VALIDATOR-283" type="fix" dev="sebb" due-to="RC Johnson">
+    URLValidator should check for illegal Hex characters
+    </action>
+    <action issue="VALIDATOR-445" type="fix" dev="sebb" due-to="devson">
+    Inet6Address may also contain a scope id
+    </action>
+    <action issue="VALIDATOR-452" type="fix" dev="sebb" due-to="devson">
+    Validation of URL containing IPv4-mapped IPv6 address
+    </action>
+    <action issue="VALIDATOR-471" type="add" dev="sebb">
+    Allow DomainValidator overrides at run-time
+    </action>
+    <action issue="VALIDATOR-438" type="fix" dev="sebb" due-to="Simon Marti">
+    IBANValidator fails for El Salvador
+    Add definition
+    </action>
+    <action type="update" dev="sebb">
+    IANA TLD lists: Updated to Version 2020073100, Last Updated Fri Jul 31 07:07:01 2020 UTC
+    </action>
+    <action issue="VALIDATOR-423" type="add" dev="sebb">
+    Add ISINValidator
+    </action>
+    <action issue="VALIDATOR-428" type="update" dev="pschumacher" due-to="Matthew Zavislak">
+    Update commons digester to 2.1
+    </action>
+    <action issue="VALIDATOR-434" type="fix" dev="kinow" due-to="emopers">
+    Field does not synchronize iteration on synchronized list
+    </action>
+    <action issue="VALIDATOR-437" type="fix" dev="ggregory">
+    Update Apache Commons BeanUtils dependency from 1.9.2 to 1.9.3.
+    This picks up BEANUTILS-482: Update commons-collections from 3.2.1 to 3.2.2 (CVE-2015-4852).
+    </action>
+    <action issue="VALIDATOR-460" type="fix" dev="ggregory" due-to="Jeff Schram">
+    Update Apache Commons BeanUtils dependency from 1.9.3 to 1.9.4
+    This picks up BEANUTILS-520: Mitigate CVE-2014-0114.
+    </action>
+    <action issue="VALIDATOR-455" type="add" dev="sebb" due-to="Eugen Hanussek">
+    Add IBAN validator for VA – Vatican City State
+    </action>
+    <action issue="VALIDATOR-461" type="fix" dev="sebb" due-to="Nils Reischmann">
+    Generic .gmbh top level domain is considered invalid
+    </action>
+    <action issue="VALIDATOR-444" type="fix" dev="sebb" due-to="Martin Scholz">
+    LongValidator: numbers bigger than the maxvalue are Valid
+    </action>
+    <action issue="VALIDATOR-416" type="fix" dev="sebb">
+    CreditCardValidator default ctor disagrees with Javadoc
+    </action>
+    <action issue="VALIDATOR-446" type="add" dev="sebb" due-to="Alex">
+    ISSN Validator extract ISSN from EAN-13
+    </action>
+    <action issue="VALIDATOR-467" type="fix" dev="sebb" due-to="Ivan Larionov">
+    URL validator fails if path starts with double slash and has underscores
+    </action>
+    <action issue="VALIDATOR-464" type="fix" dev="sebb" due-to="Sebastian Choina">
+    UrlValidator says "file://bad ^ domain.com/label/test" is valid
+    </action>
+    <action issue="VALIDATOR-449" type="fix" dev="sebb" due-to="Frederic Boutin">
+    Leading and trailing spaces in EmailValidator should not be valid
+    </action>
+    <action issue="VALIDATOR-302" type="fix" dev="sebb" due-to="Guido Zockoll">
+    EMailValidator: Addresses with leading spaces must not be accepted
+    </action>
+    <action issue="VALIDATOR-468" type="fix" dev="sebb">
+    DomainValidator.getTLDArray does not synch mutable arrays
+    </action>
+  </release>
+
+  <release version="1.6" date="2017-02-21" description="
 This is primarily a maintenance release.
 
 All projects are encouraged to update to this release of
@@ -72,14 +325,15 @@ Apache Commons Validator.
 
   Commons Validator requires Java 1.6 or later.
 
-Main enhancements
-=================
 
-* Modulus Ten Check Digit Implementation
+ Main enhancements
+ =================
 
-* Generic CreditCard validation (syntax and checkdigit only; does not check IIN)
 
-* CreditCard validation specification by numeric range
+ * Modulus Ten Check Digit Implementation
+ * Generic CreditCard validation (syntax and checkdigit only; does not check IIN)
+ * CreditCard validation specification by numeric range
+
 
  IMPORTANT NOTES
  ===============
@@ -114,7 +368,7 @@ http://commons.apache.org/validator/dependencies.html
     Generic CreditCard validation
     </action>
     <action issue="VALIDATOR-379" type="fix" dev="sebb">
-    CodeValidator unconditionally trim()s the input string - document the behaviour
+    CodeValidator unconditionally trim()s the input string - document the behavior
     </action>
     <action issue="VALIDATOR-387" type="fix" dev="sebb" due-to="Shumpei Akai">
     Userinfo without colon should be valid in UrlValidator
@@ -556,13 +810,13 @@ http://commons.apache.org/validator/dependencies.html
     <action dev="niallp" type="add">
      <p>Add new routines package containing standard validations - first
       step in the process of clearly separating standard validation
-      functions which can be used independantly, from the framework
+      functions which can be used independently, from the framework
       aspect of Commons Validator.</p>
      <p>New validators added for Date, Time, Calendar, Byte, Short,
       Integer, Long, Float, Double, BigInteger, BigDecimal,
       Currency and Percent.</p>
      <p>See <a href="apidocs/org/apache/commons/validator/routines/package-summary.html">
-      Routines Package JavaDocs</a></p>
+      Routines Package Javadocs</a></p>
     </action>
     <action dev="niallp" type="add" issue="VALIDATOR-30">
      Deprecate ValidatorResult's getActionMap() and add getActions()
@@ -738,7 +992,7 @@ http://commons.apache.org/validator/dependencies.html
     GenericTypeValidator does not accept negative Floats/Doubles.
     </action>
     <action dev="niallp" type="fix" issue="VALIDATOR-48">
-    correct UrlValidator JavaDoc.
+    correct UrlValidator Javadoc.
     </action>
     <action dev="niallp" type="add" issue="VALIDATOR-3">
     Search the locale 'hierarchy' of formsets for a Form.

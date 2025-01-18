@@ -16,36 +16,35 @@
  */
 package org.apache.commons.validator;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.net.URL;
 import java.util.Locale;
 
+import org.junit.jupiter.api.Test;
 
-/**                                                       
+/**
  * Tests entity imports.
- *
- * @version $Revision: 1649191 $
  */
 public class EntityImportTest extends AbstractCommonTest {
-
-    public EntityImportTest(String name) {
-        super(name);
-    }
 
     /**
      * Tests the entity import loading the <code>byteForm</code> form.
      */
+    @Test
     public void testEntityImport() throws Exception {
-        URL url = getClass().getResource("EntityImportTest-config.xml");
-        ValidatorResources resources = new ValidatorResources(url.toExternalForm());
-        assertNotNull("Form should be found", resources.getForm(Locale.getDefault(), "byteForm"));
-    }  
+        final URL url = getClass().getResource("EntityImportTest-config.xml");
+        final ValidatorResources resources = new ValidatorResources(url.toExternalForm());
+        assertNotNull(resources.getForm(Locale.getDefault(), "byteForm"), "Form should be found");
+    }
 
     /**
      * Tests loading ValidatorResources from a URL
      */
+    @Test
     public void testParseURL() throws Exception {
-        URL url = getClass().getResource("EntityImportTest-config.xml");
-        ValidatorResources resources = new ValidatorResources(url);
-        assertNotNull("Form should be found", resources.getForm(Locale.getDefault(), "byteForm"));
+        final URL url = getClass().getResource("EntityImportTest-config.xml");
+        final ValidatorResources resources = new ValidatorResources(url);
+        assertNotNull(resources.getForm(Locale.getDefault(), "byteForm"), "Form should be found");
     }
 }

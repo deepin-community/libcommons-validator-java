@@ -16,38 +16,62 @@
  */
 package org.apache.commons.validator;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the CreditCardValidator class.
  *
- * @version $Revision: 1739358 $
  * @deprecated this test can be removed when the deprecated class is removed
  */
 @Deprecated
-public class CreditCardValidatorTest extends TestCase {
-    
+public class CreditCardValidatorTest {
+
+    /**
+     * Test a custom implementation of CreditCardType.
+     */
+    private static class DinersClub implements CreditCardValidator.CreditCardType {
+        private static final String PREFIX = "300,301,302,303,304,305,";
+
+        @Override
+        public boolean matches(final String card) {
+            final String prefix = card.substring(0, 3) + ",";
+            return PREFIX.contains(prefix) && card.length() == 14;
+        }
+    }
+
     private static final String VALID_VISA = "4417123456789113";
     private static final String VALID_SHORT_VISA = "4222222222222";
     private static final String VALID_AMEX = "378282246310005";
     private static final String VALID_MASTERCARD = "5105105105105100";
     private static final String VALID_DISCOVER = "6011000990139424";
+
     private static final String VALID_DINERS = "30569309025904";
 
-    /**
-     * Constructor for CreditCardValidatorTest.
-     */
-    public CreditCardValidatorTest(String name) {
-        super(name);
+    @Test
+    public void testAddAllowedCardType() {
+        final CreditCardValidator ccv = new CreditCardValidator(CreditCardValidator.NONE);
+        // Turned off all cards so even valid numbers should fail
+        assertFalse(ccv.isValid(VALID_VISA));
+        assertFalse(ccv.isValid(VALID_AMEX));
+        assertFalse(ccv.isValid(VALID_MASTERCARD));
+        assertFalse(ccv.isValid(VALID_DISCOVER));
+
+        // test our custom type
+        ccv.addAllowedCardType(new DinersClub());
+        assertTrue(ccv.isValid(VALID_DINERS));
     }
 
+    @Test
     public void testIsValid() {
         CreditCardValidator ccv = new CreditCardValidator();
-        
+
         assertFalse(ccv.isValid(null));
         assertFalse(ccv.isValid(""));
-        assertFalse(ccv.isValid("123456789012"));   // too short
-        assertFalse(ccv.isValid("12345678901234567890"));   // too long
+        assertFalse(ccv.isValid("123456789012")); // too short
+        assertFalse(ccv.isValid("12345678901234567890")); // too long
         assertFalse(ccv.isValid("4417123456789112"));
         assertFalse(ccv.isValid("4417q23456w89113"));
         assertTrue(ccv.isValid(VALID_VISA));
@@ -55,35 +79,10 @@ public class CreditCardValidatorTest extends TestCase {
         assertTrue(ccv.isValid(VALID_AMEX));
         assertTrue(ccv.isValid(VALID_MASTERCARD));
         assertTrue(ccv.isValid(VALID_DISCOVER));
-        
+
         // disallow Visa so it should fail even with good number
         ccv = new CreditCardValidator(CreditCardValidator.AMEX);
         assertFalse(ccv.isValid("4417123456789113"));
-    }
-    
-    public void testAddAllowedCardType() {
-        CreditCardValidator ccv = new CreditCardValidator(CreditCardValidator.NONE);
-        // Turned off all cards so even valid numbers should fail
-        assertFalse(ccv.isValid(VALID_VISA));
-        assertFalse(ccv.isValid(VALID_AMEX));
-        assertFalse(ccv.isValid(VALID_MASTERCARD));
-        assertFalse(ccv.isValid(VALID_DISCOVER));
-        
-        // test our custom type
-        ccv.addAllowedCardType(new DinersClub());
-        assertTrue(ccv.isValid(VALID_DINERS));
-    }
-    
-    /**
-     * Test a custom implementation of CreditCardType.
-     */
-    private class DinersClub implements CreditCardValidator.CreditCardType {
-        private static final String PREFIX = "300,301,302,303,304,305,";
-        @Override
-        public boolean matches(String card) {
-            String prefix = card.substring(0, 3) + ",";
-            return ((PREFIX.contains(prefix)) && (card.length() == 14));
-        }
     }
 
 }

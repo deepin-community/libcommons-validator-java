@@ -16,85 +16,82 @@
  */
 package org.apache.commons.validator;
 
-/**                                                       
- * Value object that contains different fields to test type conversion 
- * validation. 
- *
- * @version $Revision: 1649191 $
+/**
+ * Value object that contains different fields to test type conversion validation.
  */
 public class TypeBean {
 
-    private String sByte = null;
-    private String sShort = null;
-    private String sInteger = null;
-    private String sLong = null;
-    private String sFloat = null;
-    private String sDouble = null;
-    private String sDate = null;
-    private String sCreditCard = null;
+    private String sByte;
+    private String sShort;
+    private String sInteger;
+    private String sLong;
+    private String sFloat;
+    private String sDouble;
+    private String sDate;
+    private String sCreditCard;
 
     public String getByte() {
         return sByte;
-    }
-    
-    public void setByte(String sByte) {
-        this.sByte = sByte;
-    }
-    
-    public String getShort() {
-        return sShort;
-    }
-    
-    public void setShort(String sShort) {
-        this.sShort = sShort;
-    }
-
-    public String getInteger() {
-        return sInteger;
-    }
-    
-    public void setInteger(String sInteger) {
-        this.sInteger = sInteger;
-    }
-
-    public String getLong() {
-        return sLong;
-    }
-    
-    public void setLong(String sLong) {
-        this.sLong = sLong;
-    }
-
-    public String getFloat() {
-        return sFloat;
-    }
-    
-    public void setFloat(String sFloat) {
-        this.sFloat = sFloat;
-    }
-
-    public String getDouble() {
-        return sDouble;
-    }
-    
-    public void setDouble(String sDouble) {
-        this.sDouble = sDouble;
-    }
-
-    public String getDate() {
-        return sDate;
-    }
-    
-    public void setDate(String sDate) {
-        this.sDate = sDate;
     }
 
     public String getCreditCard() {
         return sCreditCard;
     }
-    
-    public void setCreditCard(String sCreditCard) {
+
+    public String getDate() {
+        return sDate;
+    }
+
+    public String getDouble() {
+        return sDouble;
+    }
+
+    public String getFloat() {
+        return sFloat;
+    }
+
+    public String getInteger() {
+        return sInteger;
+    }
+
+    public String getLong() {
+        return sLong;
+    }
+
+    public String getShort() {
+        return sShort;
+    }
+
+    public void setByte(final String sByte) {
+        this.sByte = sByte;
+    }
+
+    public void setCreditCard(final String sCreditCard) {
         this.sCreditCard = sCreditCard;
+    }
+
+    public void setDate(final String sDate) {
+        this.sDate = sDate;
+    }
+
+    public void setDouble(final String sDouble) {
+        this.sDouble = sDouble;
+    }
+
+    public void setFloat(final String sFloat) {
+        this.sFloat = sFloat;
+    }
+
+    public void setInteger(final String sInteger) {
+        this.sInteger = sInteger;
+    }
+
+    public void setLong(final String sLong) {
+        this.sLong = sLong;
+    }
+
+    public void setShort(final String sShort) {
+        this.sShort = sShort;
     }
 
 }

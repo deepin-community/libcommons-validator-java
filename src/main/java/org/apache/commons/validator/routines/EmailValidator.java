@@ -24,14 +24,13 @@ import java.util.regex.Pattern;
  * <p>Perform email validations.</p>
  * <p>
  * Based on a script by <a href="mailto:stamhankar@hotmail.com">Sandeep V. Tamhankar</a>
- * http://javascript.internet.com
+ * https://javascript.internet.com
  * </p>
  * <p>
  * This implementation is not guaranteed to catch all possible errors in an email address.
  * </p>.
  *
- * @version $Revision: 1723573 $
- * @since Validator 1.4
+ * @since 1.4
  */
 public class EmailValidator implements Serializable {
 
@@ -42,18 +41,15 @@ public class EmailValidator implements Serializable {
     private static final String QUOTED_USER = "(\"(\\\\\"|[^\"])*\")";
     private static final String WORD = "((" + VALID_CHARS + "|')+|" + QUOTED_USER + ")";
 
-    private static final String EMAIL_REGEX = "^\\s*?(.+)@(.+?)\\s*$";
+    private static final String EMAIL_REGEX = "^(.+)@(\\S+)$";
     private static final String IP_DOMAIN_REGEX = "^\\[(.*)\\]$";
-    private static final String USER_REGEX = "^\\s*" + WORD + "(\\." + WORD + ")*$";
+    private static final String USER_REGEX = "^" + WORD + "(\\." + WORD + ")*$";
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
     private static final Pattern IP_DOMAIN_PATTERN = Pattern.compile(IP_DOMAIN_REGEX);
     private static final Pattern USER_PATTERN = Pattern.compile(USER_REGEX);
 
     private static final int MAX_USERNAME_LEN = 64;
-
-    private final boolean allowLocal;
-    private final boolean allowTld;
 
     /**
      * Singleton instance of this class, which
@@ -72,7 +68,6 @@ public class EmailValidator implements Serializable {
      *  consider local addresses valid.
      */
     private static final EmailValidator EMAIL_VALIDATOR_WITH_LOCAL = new EmailValidator(true, false);
-
 
     /**
      * Singleton instance of this class, which does
@@ -94,23 +89,10 @@ public class EmailValidator implements Serializable {
      *  with local validation as required.
      *
      * @param allowLocal Should local addresses be considered valid?
-     * @param allowTld Should TLDs be allowed?
      * @return singleton instance of this validator
      */
-    public static EmailValidator getInstance(boolean allowLocal, boolean allowTld) {
-        if(allowLocal) {
-            if (allowTld) {
-                return EMAIL_VALIDATOR_WITH_LOCAL_WITH_TLD;
-            } else {
-                return EMAIL_VALIDATOR_WITH_LOCAL;
-            }
-        } else {
-            if (allowTld) {
-                return EMAIL_VALIDATOR_WITH_TLD;
-            } else {
-                return EMAIL_VALIDATOR;
-            }
-        }
+    public static EmailValidator getInstance(final boolean allowLocal) {
+        return getInstance(allowLocal, false);
     }
 
     /**
@@ -118,10 +100,33 @@ public class EmailValidator implements Serializable {
      *  with local validation as required.
      *
      * @param allowLocal Should local addresses be considered valid?
+     * @param allowTld Should TLDs be allowed?
      * @return singleton instance of this validator
      */
-    public static EmailValidator getInstance(boolean allowLocal) {
-        return getInstance(allowLocal, false);
+    public static EmailValidator getInstance(final boolean allowLocal, final boolean allowTld) {
+        if (allowLocal) {
+            if (allowTld) {
+                return EMAIL_VALIDATOR_WITH_LOCAL_WITH_TLD;
+            }
+            return EMAIL_VALIDATOR_WITH_LOCAL;
+        }
+        if (allowTld) {
+            return EMAIL_VALIDATOR_WITH_TLD;
+        }
+        return EMAIL_VALIDATOR;
+    }
+
+    private final boolean allowTld;
+
+    private final DomainValidator domainValidator;
+
+    /**
+     * Protected constructor for subclasses to use.
+     *
+     * @param allowLocal Should local addresses be considered valid?
+     */
+    protected EmailValidator(final boolean allowLocal) {
+        this(allowLocal, false);
     }
 
     /**
@@ -130,53 +135,56 @@ public class EmailValidator implements Serializable {
      * @param allowLocal Should local addresses be considered valid?
      * @param allowTld Should TLDs be allowed?
      */
-    protected EmailValidator(boolean allowLocal, boolean allowTld) {
-        super();
-        this.allowLocal = allowLocal;
+    protected EmailValidator(final boolean allowLocal, final boolean allowTld) {
         this.allowTld = allowTld;
+        this.domainValidator = DomainValidator.getInstance(allowLocal);
     }
 
     /**
-     * Protected constructor for subclasses to use.
+     * constructor for creating instances with the specified domainValidator
      *
      * @param allowLocal Should local addresses be considered valid?
+     * @param allowTld Should TLDs be allowed?
+     * @param domainValidator allow override of the DomainValidator.
+     * The instance must have the same allowLocal setting.
+     * @since 1.7
      */
-    protected EmailValidator(boolean allowLocal) {
-        super();
-        this.allowLocal = allowLocal;
-        this.allowTld = false;
+    public EmailValidator(final boolean allowLocal, final boolean allowTld, final DomainValidator domainValidator) {
+        this.allowTld = allowTld;
+        if (domainValidator == null) {
+            throw new IllegalArgumentException("DomainValidator cannot be null");
+        }
+        if (domainValidator.isAllowLocal() != allowLocal) {
+            throw new IllegalArgumentException("DomainValidator must agree with allowLocal setting");
+        }
+        this.domainValidator = domainValidator;
     }
 
     /**
      * <p>Checks if a field has a valid e-mail address.</p>
      *
-     * @param email The value validation is being performed on.  A <code>null</code>
+     * @param email The value validation is being performed on.  A {@code null}
      *              value is considered invalid.
      * @return true if the email address is valid.
      */
-    public boolean isValid(String email) {
+    public boolean isValid(final String email) {
         if (email == null) {
             return false;
         }
-
         if (email.endsWith(".")) { // check this first - it's cheap!
             return false;
         }
-
         // Check the whole email address structure
-        Matcher emailMatcher = EMAIL_PATTERN.matcher(email);
+        final Matcher emailMatcher = EMAIL_PATTERN.matcher(email);
         if (!emailMatcher.matches()) {
             return false;
         }
-
         if (!isValidUser(emailMatcher.group(1))) {
             return false;
         }
-
         if (!isValidDomain(emailMatcher.group(2))) {
             return false;
         }
-
         return true;
     }
 
@@ -186,23 +194,20 @@ public class EmailValidator implements Serializable {
      * @param domain being validated, may be in IDN format
      * @return true if the email address's domain is valid.
      */
-    protected boolean isValidDomain(String domain) {
+    protected boolean isValidDomain(final String domain) {
         // see if domain is an IP address in brackets
-        Matcher ipDomainMatcher = IP_DOMAIN_PATTERN.matcher(domain);
+        final Matcher ipDomainMatcher = IP_DOMAIN_PATTERN.matcher(domain);
 
         if (ipDomainMatcher.matches()) {
-            InetAddressValidator inetAddressValidator =
+            final InetAddressValidator inetAddressValidator =
                     InetAddressValidator.getInstance();
             return inetAddressValidator.isValid(ipDomainMatcher.group(1));
         }
         // Domain is symbolic name
-        DomainValidator domainValidator =
-                DomainValidator.getInstance(allowLocal);
         if (allowTld) {
-            return domainValidator.isValid(domain) || (!domain.startsWith(".") && domainValidator.isValidTld(domain));
-        } else {
-            return domainValidator.isValid(domain);
+            return domainValidator.isValid(domain) || !domain.startsWith(".") && domainValidator.isValidTld(domain);
         }
+        return domainValidator.isValid(domain);
     }
 
     /**
@@ -211,12 +216,12 @@ public class EmailValidator implements Serializable {
      * @param user being validated
      * @return true if the user name is valid.
      */
-    protected boolean isValidUser(String user) {
-        
+    protected boolean isValidUser(final String user) {
+
         if (user == null || user.length() > MAX_USERNAME_LEN) {
             return false;
         }
-        
+
         return USER_PATTERN.matcher(user).matches();
     }
 

@@ -16,15 +16,14 @@
  */
 package org.apache.commons.validator.custom;
 
-import java.io.InputStream;
 import java.io.IOException;
-import org.xml.sax.SAXException;
-import org.apache.commons.validator.ValidatorResources;
+import java.io.InputStream;
 
-/**                                                       
+import org.apache.commons.validator.ValidatorResources;
+import org.xml.sax.SAXException;
+
+/**
  * Custom ValidatorResources implementation.
- *
- * @version $Revision: 1649191 $
  */
 public class CustomValidatorResources extends ValidatorResources {
 
@@ -33,11 +32,11 @@ public class CustomValidatorResources extends ValidatorResources {
     /**
      * Create a custom ValidatorResources object from an uri
      *
-     * @param in InputStream for the validation.xml configuration file. 
+     * @param in InputStream for the validation.xml configuration file.
      * @throws SAXException if the validation XML files are not valid or well formed.
      * @throws IOException  if an I/O error occurs processing the XML files
      */
-    public CustomValidatorResources(InputStream in) throws IOException, SAXException {
+    public CustomValidatorResources(final InputStream in) throws IOException, SAXException {
         super(in);
     }
 

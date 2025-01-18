@@ -16,42 +16,20 @@
  */
 package org.apache.commons.validator;
 
-import org.xml.sax.Attributes;
 import org.apache.commons.digester.AbstractObjectCreationFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xml.sax.Attributes;
 
 /**
  * Factory class used by Digester to create FormSet's.
  *
- * @version $Revision: 1739356 $
- * @since Validator 1.2
+ * @since 1.2
  */
 public class FormSetFactory extends AbstractObjectCreationFactory {
 
     /** Logging */
     private transient Log log = LogFactory.getLog(FormSetFactory.class);
-
-    /**
-     * <p>Create or retrieve a <code>FormSet</code> for the specified
-     *    attributes.</p>
-     *
-     * @param attributes The sax attributes for the formset element.
-     * @return The FormSet for a locale.
-     * @throws Exception If an error occurs creating the FormSet.
-     */
-    @Override
-    public Object createObject(Attributes attributes) throws Exception {
-
-        ValidatorResources resources = (ValidatorResources)digester.peek(0);
-
-        String language = attributes.getValue("language");
-        String country  = attributes.getValue("country");
-        String variant  = attributes.getValue("variant");
-
-        return createFormSet(resources, language, country, variant);
-
-    }
 
     /**
      * <p>Create or retrieve a <code>FormSet</code> based on the language, country
@@ -62,12 +40,12 @@ public class FormSetFactory extends AbstractObjectCreationFactory {
      * @param country The locale's country.
      * @param variant The locale's language variant.
      * @return The FormSet for a locale.
-     * @since Validator 1.2
+     * @since 1.2
      */
-    private FormSet createFormSet(ValidatorResources resources,
-                                  String language,
-                                  String country,
-                                  String variant) throws Exception {
+    private FormSet createFormSet(final ValidatorResources resources,
+                                  final String language,
+                                  final String country,
+                                  final String variant) {
 
         // Retrieve existing FormSet for the language/country/variant
         FormSet formSet = resources.getFormSet(language, country, variant);
@@ -96,6 +74,27 @@ public class FormSetFactory extends AbstractObjectCreationFactory {
     }
 
     /**
+     * <p>Create or retrieve a <code>FormSet</code> for the specified
+     *    attributes.</p>
+     *
+     * @param attributes The sax attributes for the formset element.
+     * @return The FormSet for a locale.
+     * @throws Exception If an error occurs creating the FormSet.
+     */
+    @Override
+    public Object createObject(final Attributes attributes) throws Exception {
+
+        final ValidatorResources resources = (ValidatorResources) digester.peek(0);
+
+        final String language = attributes.getValue("language");
+        final String country = attributes.getValue("country");
+        final String variant = attributes.getValue("variant");
+
+        return createFormSet(resources, language, country, variant);
+
+    }
+
+    /**
      * Accessor method for Log instance.
      *
      * The Log instance variable is transient and
@@ -107,7 +106,7 @@ public class FormSetFactory extends AbstractObjectCreationFactory {
      */
     private Log getLog() {
         if (log == null) {
-            log =  LogFactory.getLog(FormSetFactory.class);
+            log = LogFactory.getLog(FormSetFactory.class);
         }
         return log;
     }

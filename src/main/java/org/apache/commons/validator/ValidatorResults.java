@@ -26,8 +26,6 @@ import java.util.Set;
 /**
  * This contains the results of a set of validation rules processed
  * on a JavaBean.
- *
- * @version $Revision: 1739361 $
  */
 //TODO mutable non-private fields
 public class ValidatorResults implements Serializable {
@@ -37,16 +35,7 @@ public class ValidatorResults implements Serializable {
     /**
      * Map of validation results.
      */
-    protected Map<String, ValidatorResult> hResults = new HashMap<String, ValidatorResult>();
-
-    /**
-     * Merge another ValidatorResults into mine.
-     *
-     * @param results ValidatorResults to merge.
-     */
-    public void merge(ValidatorResults results) {
-        this.hResults.putAll(results.hResults);
-    }
+    protected Map<String, ValidatorResult> hResults = new HashMap<>();
 
     /**
      * Add a the result of a validator action.
@@ -55,7 +44,7 @@ public class ValidatorResults implements Serializable {
      * @param validatorName The name of the validator.
      * @param result The result of the validation.
      */
-    public void add(Field field, String validatorName, boolean result) {
+    public void add(final Field field, final String validatorName, final boolean result) {
         this.add(field, validatorName, result, null);
     }
 
@@ -68,10 +57,10 @@ public class ValidatorResults implements Serializable {
      * @param value The value returned by the validator.
      */
     public void add(
-            Field field,
-            String validatorName,
-            boolean result,
-            Object value) {
+            final Field field,
+            final String validatorName,
+            final boolean result,
+            final Object value) {
 
         ValidatorResult validatorResult = this.getValidatorResult(field.getKey());
 
@@ -91,13 +80,37 @@ public class ValidatorResults implements Serializable {
     }
 
     /**
-     * Return <code>true</code> if there are no messages recorded
-     * in this collection, or <code>false</code> otherwise.
-     *
-     * @return Whether these results are empty.
+     * Gets the set of property names for which at least one message has
+     * been recorded.
+     * @return An unmodifiable Set of the property names.
      */
-    public boolean isEmpty() {
-        return this.hResults.isEmpty();
+    public Set<String> getPropertyNames() {
+        return Collections.unmodifiableSet(this.hResults.keySet());
+    }
+
+    /**
+     * Gets a <code>Map</code> of any <code>Object</code>s returned from
+     * validation routines.
+     *
+     * @return Map of objections returned by validators.
+     */
+    public Map<String, Object> getResultValueMap() {
+        final Map<String, Object> results = new HashMap<>();
+
+        for (final String propertyKey : hResults.keySet()) {
+            final ValidatorResult vr = this.getValidatorResult(propertyKey);
+
+            for (final Iterator<String> x = vr.getActions(); x.hasNext();) {
+                final String actionKey = x.next();
+                final Object result = vr.getResult(actionKey);
+
+                if (result != null && !(result instanceof Boolean)) {
+                    results.put(propertyKey, result);
+                }
+            }
+        }
+
+        return results;
     }
 
     /**
@@ -110,43 +123,27 @@ public class ValidatorResults implements Serializable {
      *
      * @return The result of a specified key.
      */
-    public ValidatorResult getValidatorResult(String key) {
+    public ValidatorResult getValidatorResult(final String key) {
         return this.hResults.get(key);
     }
 
     /**
-     * Return the set of property names for which at least one message has
-     * been recorded.
-     * @return An unmodifiable Set of the property names.
+     * Gets {@code true} if there are no messages recorded
+     * in this collection, or {@code false} otherwise.
+     *
+     * @return Whether these results are empty.
      */
-    public Set<String> getPropertyNames() {
-        return Collections.unmodifiableSet(this.hResults.keySet());
+    public boolean isEmpty() {
+        return this.hResults.isEmpty();
     }
 
     /**
-     * Get a <code>Map</code> of any <code>Object</code>s returned from
-     * validation routines.
+     * Merge another ValidatorResults into mine.
      *
-     * @return Map of objections returned by validators.
+     * @param results ValidatorResults to merge.
      */
-    public Map<String, Object> getResultValueMap() {
-        Map<String, Object> results = new HashMap<String, Object>();
-
-        for (Iterator<String> i = hResults.keySet().iterator(); i.hasNext();) {
-            String propertyKey = i.next();
-            ValidatorResult vr = this.getValidatorResult(propertyKey);
-
-            for (Iterator<String> x = vr.getActions(); x.hasNext();) {
-                String actionKey = x.next();
-                Object result = vr.getResult(actionKey);
-
-                if (result != null && !(result instanceof Boolean)) {
-                    results.put(propertyKey, result);
-                }
-            }
-        }
-
-        return results;
+    public void merge(final ValidatorResults results) {
+        this.hResults.putAll(results.hResults);
     }
 
 }

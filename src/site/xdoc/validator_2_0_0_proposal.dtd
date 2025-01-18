@@ -25,7 +25,6 @@
      "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 2.0.0//EN"
      "http://jakarta.apache.org/commons/dtds/validator_2_0_0.dtd">
 
-    $Id: validator_2_0_0_proposal.dtd 478334 2006-11-22 21:31:54Z niallp $
 -->
 
 <!--

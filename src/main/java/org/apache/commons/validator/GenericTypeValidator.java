@@ -31,8 +31,6 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This class contains basic methods for performing validations that return the
  * correctly typed class based on the validation performed.
- *
- * @version $Revision: 1716212 $
  */
 public class GenericTypeValidator implements Serializable {
 
@@ -46,14 +44,14 @@ public class GenericTypeValidator implements Serializable {
      * @param value The value validation is being performed on.
      * @return the converted Byte value.
      */
-    public static Byte formatByte(String value) {
+    public static Byte formatByte(final String value) {
         if (value == null) {
             return null;
         }
 
         try {
             return Byte.valueOf(value);
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             return null;
         }
 
@@ -67,7 +65,7 @@ public class GenericTypeValidator implements Serializable {
      *               null)
      * @return the converted Byte value.
      */
-    public static Byte formatByte(String value, Locale locale) {
+    public static Byte formatByte(final String value, final Locale locale) {
         Byte result = null;
 
         if (value != null) {
@@ -78,8 +76,8 @@ public class GenericTypeValidator implements Serializable {
                 formatter = NumberFormat.getNumberInstance(Locale.getDefault());
             }
             formatter.setParseIntegerOnly(true);
-            ParsePosition pos = new ParsePosition(0);
-            Number num = formatter.parse(value, pos);
+            final ParsePosition pos = new ParsePosition(0);
+            final Number num = formatter.parse(value, pos);
 
             // If there was no error      and we used the whole string
             if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
@@ -93,267 +91,22 @@ public class GenericTypeValidator implements Serializable {
     }
 
     /**
-     * Checks if the value can safely be converted to a short primitive.
+     * Checks if the field is a valid credit card number.
+     *
+     * <p>Reference Sean M. Burke's <a href="http://www.ling.nwu.edu/~sburke/pub/luhn_lib.pl">
+     * script</a>.</p>
      *
      * @param value The value validation is being performed on.
-     * @return the converted Short value.
+     * @return the converted Credit Card number.
      */
-    public static Short formatShort(String value) {
-        if (value == null) {
-            return null;
-        }
-
-        try {
-            return Short.valueOf(value);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-
-    }
-
-    /**
-     * Checks if the value can safely be converted to a short primitive.
-     *
-     * @param value  The value validation is being performed on.
-     * @param locale The locale to use to parse the number (system default if
-     *               null)
-     * @return the converted Short value.
-     */
-    public static Short formatShort(String value, Locale locale) {
-        Short result = null;
-
-        if (value != null) {
-            NumberFormat formatter = null;
-            if (locale != null) {
-                formatter = NumberFormat.getNumberInstance(locale);
-            } else {
-                formatter = NumberFormat.getNumberInstance(Locale.getDefault());
-            }
-            formatter.setParseIntegerOnly(true);
-            ParsePosition pos = new ParsePosition(0);
-            Number num = formatter.parse(value, pos);
-
-            // If there was no error      and we used the whole string
-            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
-                    num.doubleValue() >= Short.MIN_VALUE &&
-                    num.doubleValue() <= Short.MAX_VALUE) {
-                result = Short.valueOf(num.shortValue());
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Checks if the value can safely be converted to a int primitive.
-     *
-     * @param value The value validation is being performed on.
-     * @return the converted Integer value.
-     */
-    public static Integer formatInt(String value) {
-        if (value == null) {
-            return null;
-        }
-
-        try {
-            return Integer.valueOf(value);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-
-    }
-
-    /**
-     * Checks if the value can safely be converted to an int primitive.
-     *
-     * @param value  The value validation is being performed on.
-     * @param locale The locale to use to parse the number (system default if
-     *               null)
-     * @return the converted Integer value.
-     */
-    public static Integer formatInt(String value, Locale locale) {
-        Integer result = null;
-
-        if (value != null) {
-            NumberFormat formatter = null;
-            if (locale != null) {
-                formatter = NumberFormat.getNumberInstance(locale);
-            } else {
-                formatter = NumberFormat.getNumberInstance(Locale.getDefault());
-            }
-            formatter.setParseIntegerOnly(true);
-            ParsePosition pos = new ParsePosition(0);
-            Number num = formatter.parse(value, pos);
-
-            // If there was no error      and we used the whole string
-            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
-                    num.doubleValue() >= Integer.MIN_VALUE &&
-                    num.doubleValue() <= Integer.MAX_VALUE) {
-                result = Integer.valueOf(num.intValue());
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Checks if the value can safely be converted to a long primitive.
-     *
-     * @param value The value validation is being performed on.
-     * @return the converted Long value.
-     */
-    public static Long formatLong(String value) {
-        if (value == null) {
-            return null;
-        }
-
-        try {
-            return Long.valueOf(value);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-
-    }
-
-    /**
-     * Checks if the value can safely be converted to a long primitive.
-     *
-     * @param value  The value validation is being performed on.
-     * @param locale The locale to use to parse the number (system default if
-     *               null)
-     * @return the converted Long value.
-     */
-    public static Long formatLong(String value, Locale locale) {
-        Long result = null;
-
-        if (value != null) {
-            NumberFormat formatter = null;
-            if (locale != null) {
-                formatter = NumberFormat.getNumberInstance(locale);
-            } else {
-                formatter = NumberFormat.getNumberInstance(Locale.getDefault());
-            }
-            formatter.setParseIntegerOnly(true);
-            ParsePosition pos = new ParsePosition(0);
-            Number num = formatter.parse(value, pos);
-
-            // If there was no error      and we used the whole string
-            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
-                    num.doubleValue() >= Long.MIN_VALUE &&
-                    num.doubleValue() <= Long.MAX_VALUE) {
-                result = Long.valueOf(num.longValue());
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Checks if the value can safely be converted to a float primitive.
-     *
-     * @param value The value validation is being performed on.
-     * @return the converted Float value.
-     */
-    public static Float formatFloat(String value) {
-        if (value == null) {
-            return null;
-        }
-
-        try {
-            return new Float(value);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-
-    }
-
-    /**
-     * Checks if the value can safely be converted to a float primitive.
-     *
-     * @param value  The value validation is being performed on.
-     * @param locale The locale to use to parse the number (system default if
-     *               null)
-     * @return the converted Float value.
-     */
-    public static Float formatFloat(String value, Locale locale) {
-        Float result = null;
-
-        if (value != null) {
-            NumberFormat formatter = null;
-            if (locale != null) {
-                formatter = NumberFormat.getInstance(locale);
-            } else {
-                formatter = NumberFormat.getInstance(Locale.getDefault());
-            }
-            ParsePosition pos = new ParsePosition(0);
-            Number num = formatter.parse(value, pos);
-
-            // If there was no error      and we used the whole string
-            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
-                    num.doubleValue() >= (Float.MAX_VALUE * -1) &&
-                    num.doubleValue() <= Float.MAX_VALUE) {
-                result = new Float(num.floatValue());
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Checks if the value can safely be converted to a double primitive.
-     *
-     * @param value The value validation is being performed on.
-     * @return the converted Double value.
-     */
-    public static Double formatDouble(String value) {
-        if (value == null) {
-            return null;
-        }
-
-        try {
-            return new Double(value);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-
-    }
-
-    /**
-     * Checks if the value can safely be converted to a double primitive.
-     *
-     * @param value  The value validation is being performed on.
-     * @param locale The locale to use to parse the number (system default if
-     *               null)
-     * @return the converted Double value.
-     */
-    public static Double formatDouble(String value, Locale locale) {
-        Double result = null;
-
-        if (value != null) {
-            NumberFormat formatter = null;
-            if (locale != null) {
-                formatter = NumberFormat.getInstance(locale);
-            } else {
-                formatter = NumberFormat.getInstance(Locale.getDefault());
-            }
-            ParsePosition pos = new ParsePosition(0);
-            Number num = formatter.parse(value, pos);
-
-            // If there was no error      and we used the whole string
-            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
-                    num.doubleValue() >= (Double.MAX_VALUE * -1) &&
-                    num.doubleValue() <= Double.MAX_VALUE) {
-                result = new Double(num.doubleValue());
-            }
-        }
-
-        return result;
+    public static Long formatCreditCard(final String value) {
+        return GenericValidator.isCreditCard(value) ? Long.valueOf(value) : null;
     }
 
     /**
      * Checks if the field is a valid date.
      *
-     * <p>The {@code Locale} is used with {@code java.text.DateFormat}. The {@link java.text.DateFormat#setLenient(boolean)}
+     * <p>The {@code Locale} is used with {@link java.text.DateFormat}. The {@link java.text.DateFormat#setLenient(boolean)}
      * method is set to {@code false} for all.
      * </p>
      *
@@ -361,7 +114,7 @@ public class GenericTypeValidator implements Serializable {
      * @param locale The Locale to use to parse the date (system default if null)
      * @return the converted Date value.
      */
-    public static Date formatDate(String value, Locale locale) {
+    public static Date formatDate(final String value, final Locale locale) {
         Date date = null;
 
         if (value == null) {
@@ -395,11 +148,11 @@ public class GenericTypeValidator implements Serializable {
             // Firstly, try with the short form
             try {
                 date = formatterShort.parse(value);
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 // Fall back on the default one
                 date = formatterDefault.parse(value);
             }
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             // Bad date, so LOG and return null
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Date parse failed value=[" + value + "], " +
@@ -413,7 +166,7 @@ public class GenericTypeValidator implements Serializable {
     /**
      * Checks if the field is a valid date.
      *
-     * <p>The pattern is used with {@code java.text.SimpleDateFormat}.
+     * <p>The pattern is used with {@link java.text.SimpleDateFormat}.
      * If strict is true, then the length will be checked so '2/12/1999' will
      * not pass validation with the format 'MM/dd/yyyy' because the month isn't
      * two digits. The {@link java.text.SimpleDateFormat#setLenient(boolean)}
@@ -426,17 +179,17 @@ public class GenericTypeValidator implements Serializable {
      *                    datePattern.
      * @return the converted Date value.
      */
-    public static Date formatDate(String value, String datePattern, boolean strict) {
+    public static Date formatDate(final String value, final String datePattern, final boolean strict) {
         Date date = null;
 
         if (value == null
                 || datePattern == null
-                || datePattern.length() == 0) {
+                || datePattern.isEmpty()) {
             return null;
         }
 
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat(datePattern);
+            final SimpleDateFormat formatter = new SimpleDateFormat(datePattern);
             formatter.setLenient(false);
 
             date = formatter.parse(value);
@@ -444,7 +197,7 @@ public class GenericTypeValidator implements Serializable {
             if (strict && datePattern.length() != value.length()) {
                 date = null;
             }
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             // Bad date so return null
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Date parse failed value=[" + value + "], " +
@@ -457,16 +210,261 @@ public class GenericTypeValidator implements Serializable {
     }
 
     /**
-     * Checks if the field is a valid credit card number.
-     *
-     * <p>Reference Sean M. Burke's <a href="http://www.ling.nwu.edu/~sburke/pub/luhn_lib.pl">
-     * script</a>.</p>
+     * Checks if the value can safely be converted to a double primitive.
      *
      * @param value The value validation is being performed on.
-     * @return the converted Credit Card number.
+     * @return the converted Double value.
      */
-    public static Long formatCreditCard(String value) {
-        return GenericValidator.isCreditCard(value) ? Long.valueOf(value) : null;
+    public static Double formatDouble(final String value) {
+        if (value == null) {
+            return null;
+        }
+
+        try {
+            return Double.valueOf(value);
+        } catch (final NumberFormatException e) {
+            return null;
+        }
+
+    }
+
+    /**
+     * Checks if the value can safely be converted to a double primitive.
+     *
+     * @param value  The value validation is being performed on.
+     * @param locale The locale to use to parse the number (system default if
+     *               null)
+     * @return the converted Double value.
+     */
+    public static Double formatDouble(final String value, final Locale locale) {
+        Double result = null;
+
+        if (value != null) {
+            NumberFormat formatter = null;
+            if (locale != null) {
+                formatter = NumberFormat.getInstance(locale);
+            } else {
+                formatter = NumberFormat.getInstance(Locale.getDefault());
+            }
+            final ParsePosition pos = new ParsePosition(0);
+            final Number num = formatter.parse(value, pos);
+
+            // If there was no error      and we used the whole string
+            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
+                    num.doubleValue() >= Double.MAX_VALUE * -1 &&
+                    num.doubleValue() <= Double.MAX_VALUE) {
+                result = Double.valueOf(num.doubleValue());
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Checks if the value can safely be converted to a float primitive.
+     *
+     * @param value The value validation is being performed on.
+     * @return the converted Float value.
+     */
+    public static Float formatFloat(final String value) {
+        if (value == null) {
+            return null;
+        }
+
+        try {
+            return Float.valueOf(value);
+        } catch (final NumberFormatException e) {
+            return null;
+        }
+
+    }
+
+    /**
+     * Checks if the value can safely be converted to a float primitive.
+     *
+     * @param value  The value validation is being performed on.
+     * @param locale The locale to use to parse the number (system default if
+     *               null)
+     * @return the converted Float value.
+     */
+    public static Float formatFloat(final String value, final Locale locale) {
+        Float result = null;
+
+        if (value != null) {
+            NumberFormat formatter = null;
+            if (locale != null) {
+                formatter = NumberFormat.getInstance(locale);
+            } else {
+                formatter = NumberFormat.getInstance(Locale.getDefault());
+            }
+            final ParsePosition pos = new ParsePosition(0);
+            final Number num = formatter.parse(value, pos);
+
+            // If there was no error      and we used the whole string
+            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
+                    num.doubleValue() >= Float.MAX_VALUE * -1 &&
+                    num.doubleValue() <= Float.MAX_VALUE) {
+                result = Float.valueOf(num.floatValue());
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Checks if the value can safely be converted to a int primitive.
+     *
+     * @param value The value validation is being performed on.
+     * @return the converted Integer value.
+     */
+    public static Integer formatInt(final String value) {
+        if (value == null) {
+            return null;
+        }
+
+        try {
+            return Integer.valueOf(value);
+        } catch (final NumberFormatException e) {
+            return null;
+        }
+
+    }
+
+    /**
+     * Checks if the value can safely be converted to an int primitive.
+     *
+     * @param value  The value validation is being performed on.
+     * @param locale The locale to use to parse the number (system default if
+     *               null)
+     * @return the converted Integer value.
+     */
+    public static Integer formatInt(final String value, final Locale locale) {
+        Integer result = null;
+
+        if (value != null) {
+            NumberFormat formatter = null;
+            if (locale != null) {
+                formatter = NumberFormat.getNumberInstance(locale);
+            } else {
+                formatter = NumberFormat.getNumberInstance(Locale.getDefault());
+            }
+            formatter.setParseIntegerOnly(true);
+            final ParsePosition pos = new ParsePosition(0);
+            final Number num = formatter.parse(value, pos);
+
+            // If there was no error      and we used the whole string
+            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
+                    num.doubleValue() >= Integer.MIN_VALUE &&
+                    num.doubleValue() <= Integer.MAX_VALUE) {
+                result = Integer.valueOf(num.intValue());
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Checks if the value can safely be converted to a long primitive.
+     *
+     * @param value The value validation is being performed on.
+     * @return the converted Long value.
+     */
+    public static Long formatLong(final String value) {
+        if (value == null) {
+            return null;
+        }
+
+        try {
+            return Long.valueOf(value);
+        } catch (final NumberFormatException e) {
+            return null;
+        }
+
+    }
+
+    /**
+     * Checks if the value can safely be converted to a long primitive.
+     *
+     * @param value  The value validation is being performed on.
+     * @param locale The locale to use to parse the number (system default if
+     *               null)
+     * @return the converted Long value.
+     */
+    public static Long formatLong(final String value, final Locale locale) {
+        Long result = null;
+
+        if (value != null) {
+            NumberFormat formatter = null;
+            if (locale != null) {
+                formatter = NumberFormat.getNumberInstance(locale);
+            } else {
+                formatter = NumberFormat.getNumberInstance(Locale.getDefault());
+            }
+            formatter.setParseIntegerOnly(true);
+            final ParsePosition pos = new ParsePosition(0);
+            final Number num = formatter.parse(value, pos);
+
+            // If there was no error      and we used the whole string
+            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
+                    num.doubleValue() >= Long.MIN_VALUE &&
+                    num.doubleValue() <= Long.MAX_VALUE) {
+                result = Long.valueOf(num.longValue());
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Checks if the value can safely be converted to a short primitive.
+     *
+     * @param value The value validation is being performed on.
+     * @return the converted Short value.
+     */
+    public static Short formatShort(final String value) {
+        if (value == null) {
+            return null;
+        }
+
+        try {
+            return Short.valueOf(value);
+        } catch (final NumberFormatException e) {
+            return null;
+        }
+
+    }
+
+    /**
+     * Checks if the value can safely be converted to a short primitive.
+     *
+     * @param value  The value validation is being performed on.
+     * @param locale The locale to use to parse the number (system default if
+     *               null)
+     * @return the converted Short value.
+     */
+    public static Short formatShort(final String value, final Locale locale) {
+        Short result = null;
+
+        if (value != null) {
+            NumberFormat formatter = null;
+            if (locale != null) {
+                formatter = NumberFormat.getNumberInstance(locale);
+            } else {
+                formatter = NumberFormat.getNumberInstance(Locale.getDefault());
+            }
+            formatter.setParseIntegerOnly(true);
+            final ParsePosition pos = new ParsePosition(0);
+            final Number num = formatter.parse(value, pos);
+
+            // If there was no error      and we used the whole string
+            if (pos.getErrorIndex() == -1 && pos.getIndex() == value.length() &&
+                    num.doubleValue() >= Short.MIN_VALUE &&
+                    num.doubleValue() <= Short.MAX_VALUE) {
+                result = Short.valueOf(num.shortValue());
+            }
+        }
+
+        return result;
     }
 
 }

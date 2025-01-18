@@ -16,62 +16,38 @@
  */
 package org.apache.commons.validator;
 
+import org.junit.jupiter.api.Test;
 
-
-
-/**                                                       
+/**
  * Performs Validation Test for <code>int</code> validations.
- *
- * @version $Revision: 1649191 $
  */
 public class IntegerTest extends AbstractNumberTest {
 
-
-    public IntegerTest(String name) {
-        super(name);
-        FORM_KEY = "intForm";
-        ACTION = "int";
+    public IntegerTest() {
+        formKey = "intForm";
+        action = "int";
     }
 
     /**
      * Tests the int validation.
      */
+    @Test
     public void testInt() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
+        final ValueBean info = new ValueBean();
         info.setValue("0");
 
         valueTest(info, true);
     }
 
     /**
-     * Tests the int validation.
-     */
-    public void testIntMin() throws ValidatorException {
-        // Create bean to run test on.
-        ValueBean info = new ValueBean();
-        info.setValue(new Integer(Integer.MIN_VALUE).toString());
-
-        valueTest(info, true);
-    }
-
-    /**
-     * Tests the int validation.
-     */
-    public void testIntegerMax() throws ValidatorException {
-        // Create bean to run test on.
-        ValueBean info = new ValueBean();
-        info.setValue(new Integer(Integer.MAX_VALUE).toString());
-
-        valueTest(info, true);
-    }
-
-    /**
      * Tests the int validation failure.
      */
-    public void testIntFailure() throws ValidatorException {
+    @Test
+    public void testIntBeyondMax() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
+        final ValueBean info = new ValueBean();
+        info.setValue(Integer.MAX_VALUE + "1");
 
         valueTest(info, false);
     }
@@ -79,23 +55,48 @@ public class IntegerTest extends AbstractNumberTest {
     /**
      * Tests the int validation failure.
      */
+    @Test
     public void testIntBeyondMin() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
+        final ValueBean info = new ValueBean();
         info.setValue(Integer.MIN_VALUE + "1");
 
         valueTest(info, false);
     }
 
     /**
+     * Tests the int validation.
+     */
+    @Test
+    public void testIntegerMax() throws ValidatorException {
+        // Create bean to run test on.
+        final ValueBean info = new ValueBean();
+        info.setValue(Integer.toString(Integer.MAX_VALUE));
+
+        valueTest(info, true);
+    }
+
+    /**
      * Tests the int validation failure.
      */
-    public void testIntBeyondMax() throws ValidatorException {
+    @Test
+    public void testIntFailure() throws ValidatorException {
         // Create bean to run test on.
-        ValueBean info = new ValueBean();
-        info.setValue(Integer.MAX_VALUE + "1");
+        final ValueBean info = new ValueBean();
 
         valueTest(info, false);
+    }
+
+    /**
+     * Tests the int validation.
+     */
+    @Test
+    public void testIntMin() throws ValidatorException {
+        // Create bean to run test on.
+        final ValueBean info = new ValueBean();
+        info.setValue(Integer.toString(Integer.MIN_VALUE));
+
+        valueTest(info, true);
     }
 
 }

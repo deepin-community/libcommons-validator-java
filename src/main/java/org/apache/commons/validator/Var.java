@@ -22,8 +22,6 @@ import java.io.Serializable;
  * A variable that can be associated with a <code>Field</code> for
  * passing in information to a pluggable validator.  Instances of this class are
  * configured with a &lt;var&gt; xml element.
- *
- * @version $Revision: 1739356 $
  */
 public class Var implements Cloneable, Serializable {
 
@@ -50,129 +48,44 @@ public class Var implements Cloneable, Serializable {
     /**
      * The name of the variable.
      */
-    private String name = null;
+    private String name;
 
     /**
      * The key or value the variable.
      */
-    private String value = null;
+    private String value;
 
     /**
      * The optional JavaScript type of the variable.
      */
-    private String jsType = null;
+    private String jsType;
 
     /**
      * Whether the variable is a resource [false]
      */
-    private boolean resource = false;
+    private boolean resource;
 
     /**
      * The bundle for a variable (when resource = 'true').
      */
-    private String bundle = null;
+    private String bundle;
 
     /**
      * Default Constructor.
      */
     public Var() {
-        super();
     }
 
     /**
      * Constructs a variable with a specified name, value
-     * and Javascript type.
+     * and JavaScript type.
      * @param name Variable name.
      * @param value Variable value.
-     * @param jsType Variable Javascript type.
+     * @param jsType Variable JavaScript type.
      */
-    public Var(String name, String value, String jsType) {
+    public Var(final String name, final String value, final String jsType) {
         this.name = name;
         this.value = value;
-        this.jsType = jsType;
-    }
-
-    /**
-     * Gets the name of the variable.
-     * @return The name of the variable.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Sets the name of the variable.
-     * @param name The name of the variable.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets the value of the variable.
-     * @return The value of the variable.
-     */
-    public String getValue() {
-        return this.value;
-    }
-
-    /**
-     * Sets the value of the variable.
-     * @param value The value of the variable.
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    /**
-     * Tests whether or not the value is a resource key or literal value.
-     * @return <code>true</code> if value is a resource key.
-     * @since Validator 1.2.0
-     */
-    public boolean isResource() {
-        return this.resource;
-    }
-
-    /**
-     * Sets whether or not the value is a resource.
-     * @param resource If true indicates the value is a resource.
-     * @since Validator 1.2.0
-     */
-    public void setResource(boolean resource) {
-        this.resource = resource;
-    }
-
-    /**
-     * Returns the resource bundle name.
-     * @return The bundle name.
-     * @since Validator 1.2.0
-     */
-    public String getBundle() {
-        return this.bundle;
-    }
-
-    /**
-     * Sets the resource bundle name.
-     * @param bundle The new bundle name.
-     * @since Validator 1.2.0
-     */
-    public void setBundle(String bundle) {
-        this.bundle = bundle;
-    }
-
-    /**
-     * Gets the JavaScript type of the variable.
-     * @return The Javascript type of the variable.
-     */
-    public String getJsType() {
-        return this.jsType;
-    }
-
-    /**
-     * Sets the JavaScript type of the variable.
-     * @param jsType The Javascript type of the variable.
-     */
-    public void setJsType(String jsType) {
         this.jsType = jsType;
     }
 
@@ -185,9 +98,93 @@ public class Var implements Cloneable, Serializable {
         try {
             return super.clone();
 
-        } catch(CloneNotSupportedException e) {
-            throw new RuntimeException(e.toString());
+        } catch (final CloneNotSupportedException e) {
+            throw new UnsupportedOperationException(e.toString(), e);
         }
+    }
+
+    /**
+     * Returns the resource bundle name.
+     * @return The bundle name.
+     * @since 1.2.0
+     */
+    public String getBundle() {
+        return this.bundle;
+    }
+
+    /**
+     * Gets the JavaScript type of the variable.
+     * @return The JavaScript type of the variable.
+     */
+    public String getJsType() {
+        return this.jsType;
+    }
+
+    /**
+     * Gets the name of the variable.
+     * @return The name of the variable.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Gets the value of the variable.
+     * @return The value of the variable.
+     */
+    public String getValue() {
+        return this.value;
+    }
+
+    /**
+     * Tests whether or not the value is a resource key or literal value.
+     * @return {@code true} if value is a resource key.
+     * @since 1.2.0
+     */
+    public boolean isResource() {
+        return this.resource;
+    }
+
+    /**
+     * Sets the resource bundle name.
+     * @param bundle The new bundle name.
+     * @since 1.2.0
+     */
+    public void setBundle(final String bundle) {
+        this.bundle = bundle;
+    }
+
+    /**
+     * Sets the JavaScript type of the variable.
+     * @param jsType The JavaScript type of the variable.
+     */
+    public void setJsType(final String jsType) {
+        this.jsType = jsType;
+    }
+
+    /**
+     * Sets the name of the variable.
+     * @param name The name of the variable.
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    /**
+     * Sets whether or not the value is a resource.
+     * @param resource If true indicates the value is a resource.
+     * @since 1.2.0
+     */
+    public void setResource(final boolean resource) {
+        this.resource = resource;
+    }
+
+    /**
+     * Sets the value of the variable.
+     * @param value The value of the variable.
+     */
+    public void setValue(final String value) {
+        this.value = value;
     }
 
     /**
@@ -196,7 +193,7 @@ public class Var implements Cloneable, Serializable {
      */
     @Override
     public String toString() {
-        StringBuilder results = new StringBuilder();
+        final StringBuilder results = new StringBuilder();
 
         results.append("Var: name=");
         results.append(name);

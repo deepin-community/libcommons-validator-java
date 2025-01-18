@@ -19,41 +19,26 @@ package org.apache.commons.validator;
 import java.io.IOException;
 import java.io.InputStream;
 
-import junit.framework.TestCase;
-
 import org.xml.sax.SAXException;
 
 /**
  * Consolidates reading in XML config file into parent class.
- *
- * @version $Revision: 1649191 $
  */
-abstract public class AbstractCommonTest extends TestCase {
-    
+abstract public class AbstractCommonTest {
+
     /**
      * Resources used for validation tests.
      */
-    protected ValidatorResources resources = null;
-
-    public AbstractCommonTest(String string) {
-        super(string);
-    }
+    protected ValidatorResources resources;
+    protected String name;
 
     /**
-     * Load <code>ValidatorResources</code> from
-     * validator-numeric.xml.
+     * Load <code>ValidatorResources</code> from validator-numeric.xml.
      */
-    protected void loadResources(String file) throws IOException, SAXException {
+    protected void loadResources(final String file) throws IOException, SAXException {
         // Load resources
-        InputStream in = null;
-
-        try {
-            in = this.getClass().getResourceAsStream(file);
+        try (InputStream in = this.getClass().getResourceAsStream(file)) {
             resources = new ValidatorResources(in);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
     }
 }

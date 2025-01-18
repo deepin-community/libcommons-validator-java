@@ -16,63 +16,56 @@
  */
 package org.apache.commons.validator;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.IOException;
 import java.util.Locale;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 /**
  * Performs Validation Test for locale validations.
- *
- * @version $Revision: 1747121 $
  */
 public class LocaleTest extends AbstractCommonTest {
 
     /**
      * The key used to retrieve the set of validation rules from the xml file.
      */
-    protected static String FORM_KEY = "nameForm";
+    protected static final String FORM_KEY = "nameForm";
 
-    /** The key used to retrieve the validator action.  */
-    protected static String ACTION = "required";
-
-    /**
-     * Constructor for the LocaleTest object
-     *
-     * @param name  param
-     */
-    public LocaleTest(String name) {
-        super(name);
-    }
+    /** The key used to retrieve the validator action. */
+    protected static final String ACTION = "required";
 
     /**
      * Load <code>ValidatorResources</code> from validator-locale.xml.
      *
-     * @throws IOException   If something goes wrong
-     * @throws SAXException  If something goes wrong
+     * @throws IOException  If something goes wrong
+     * @throws SAXException If something goes wrong
      */
-    @Override
-    protected void setUp()
-        throws IOException, SAXException {
+    @BeforeEach
+    protected void setUp() throws IOException, SAXException {
         // Load resources
         loadResources("LocaleTest-config.xml");
     }
 
     /** The teardown method for JUnit */
-    @Override
+    @AfterEach
     protected void tearDown() {
     }
 
     /**
-     * See what happens when we try to validate with a Locale, Country and
-     * variant. Also check if the added locale validation field is getting used.
+     * See what happens when we try to validate with a Locale, Country and variant. Also check if the added locale validation field is getting used.
      *
-     * @throws ValidatorException  If something goes wrong
+     * @throws ValidatorException If something goes wrong
      */
-    public void testLocale1()
-        throws ValidatorException {
+    @Test
+    public void testLocale1() throws ValidatorException {
         // Create bean to run test on.
-        NameBean name = new NameBean();
+        final NameBean name = new NameBean();
         name.setFirstName("");
         name.setLastName("");
 
@@ -80,15 +73,14 @@ public class LocaleTest extends AbstractCommonTest {
     }
 
     /**
-     * See what happens when we try to validate with a Locale, Country and
-     * variant
+     * See what happens when we try to validate with a Locale, Country and variant
      *
-     * @throws ValidatorException  If something goes wrong
+     * @throws ValidatorException If something goes wrong
      */
-    public void testLocale2()
-        throws ValidatorException {
+    @Test
+    public void testLocale2() throws ValidatorException {
         // Create bean to run test on.
-        NameBean name = new NameBean();
+        final NameBean name = new NameBean();
         name.setFirstName("");
         name.setLastName("");
 
@@ -96,15 +88,14 @@ public class LocaleTest extends AbstractCommonTest {
     }
 
     /**
-     * See what happens when we try to validate with a Locale, Country and
-     * variant
+     * See what happens when we try to validate with a Locale, Country and variant
      *
-     * @throws ValidatorException  If something goes wrong
+     * @throws ValidatorException If something goes wrong
      */
-    public void testLocale3()
-        throws ValidatorException {
+    @Test
+    public void testLocale3() throws ValidatorException {
         // Create bean to run test on.
-        NameBean name = new NameBean();
+        final NameBean name = new NameBean();
         name.setFirstName("");
         name.setLastName("");
 
@@ -112,16 +103,15 @@ public class LocaleTest extends AbstractCommonTest {
     }
 
     /**
-     * See if a locale of en_UK_TEST falls back to en_UK instead of default form
-     * set. Bug #16920 states that this isn't happening, even though it is
-     * passing this test. see #16920.
+     * See if a locale of en_UK_TEST falls back to en_UK instead of default form set. Bug #16920 states that this isn't happening, even though it is passing
+     * this test. see #16920.
      *
-     * @throws ValidatorException  If something goes wrong
+     * @throws ValidatorException If something goes wrong
      */
-    public void testLocale4()
-        throws ValidatorException {
+    @Test
+    public void testLocale4() throws ValidatorException {
         // Create bean to run test on.
-        NameBean name = new NameBean();
+        final NameBean name = new NameBean();
         name.setFirstName("");
         name.setLastName("");
 
@@ -131,12 +121,12 @@ public class LocaleTest extends AbstractCommonTest {
     /**
      * See if a locale of language=en falls back to default form set.
      *
-     * @throws ValidatorException  If something goes wrong
+     * @throws ValidatorException If something goes wrong
      */
-    public void testLocale5()
-        throws ValidatorException {
+    @Test
+    public void testLocale5() throws ValidatorException {
         // Create bean to run test on.
-        NameBean name = new NameBean();
+        final NameBean name = new NameBean();
         name.setFirstName("");
         name.setLastName("");
 
@@ -146,58 +136,52 @@ public class LocaleTest extends AbstractCommonTest {
     /**
      * Utlity class to run a test on a value.
      *
-     * @param name                    param
-     * @param loc                     param
-     * @param firstGood               param
-     * @param lastGood                param
-     * @param middleGood              param
-     * @throws ValidatorException  If something goes wrong
+     * @param name       param
+     * @param loc        param
+     * @param firstGood  param
+     * @param lastGood   param
+     * @param middleGood param
+     * @throws ValidatorException If something goes wrong
      */
-    private void valueTest(Object name, Locale loc, boolean firstGood, boolean lastGood, boolean middleGood)
-        throws ValidatorException {
+    private void valueTest(final Object name, final Locale loc, final boolean firstGood, final boolean lastGood, final boolean middleGood)
+            throws ValidatorException {
 
         // Construct validator based on the loaded resources
         // and the form key
-        Validator validator = new Validator(resources, FORM_KEY);
+        final Validator validator = new Validator(resources, FORM_KEY);
         // add the name bean to the validator as a resource
         // for the validations to be performed on.
         validator.setParameter(Validator.BEAN_PARAM, name);
         validator.setParameter(Validator.LOCALE_PARAM, loc);
         // Get results of the validation.
-        ValidatorResults results = null;
-
         // throws ValidatorException,
         // but we aren't catching for testing
         // since no validation methods we use
         // throw this
-        results = validator.validate();
+        final ValidatorResults results = validator.validate();
 
-        assertNotNull("Results are null.", results);
+        assertNotNull(results, "Results are null.");
 
-        ValidatorResult resultlast = results.getValidatorResult("lastName");
-        ValidatorResult resultfirst = results.getValidatorResult("firstName");
-        ValidatorResult resultmiddle = results.getValidatorResult("middleName");
+        final ValidatorResult resultlast = results.getValidatorResult("lastName");
+        final ValidatorResult resultfirst = results.getValidatorResult("firstName");
+        final ValidatorResult resultmiddle = results.getValidatorResult("middleName");
 
         if (firstGood) {
             assertNull(resultfirst);
-        }
-        else {
+        } else {
             assertNotNull(resultfirst);
         }
 
         if (middleGood) {
             assertNull(resultmiddle);
-        }
-        else {
+        } else {
             assertNotNull(resultmiddle);
         }
 
         if (lastGood) {
             assertNull(resultlast);
-        }
-        else {
+        } else {
             assertNotNull(resultlast);
         }
     }
 }
-

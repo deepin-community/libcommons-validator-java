@@ -35,8 +35,6 @@ import java.io.Serializable;
  * There cannot be a flag with a value of 3 because that represents Flag 1
  * and Flag 2 both being on/true.
  * </p>
- *
- * @version $Revision: 1739356 $
  */
 public class Flags implements Serializable, Cloneable {
 
@@ -45,13 +43,12 @@ public class Flags implements Serializable, Cloneable {
     /**
      * Represents the current flag state.
      */
-    private long flags = 0;
+    private long flags;
 
     /**
      * Create a new Flags object.
      */
     public Flags() {
-        super();
     }
 
     /**
@@ -59,9 +56,50 @@ public class Flags implements Serializable, Cloneable {
      *
      * @param flags collection of boolean flags to represent.
      */
-    public Flags(long flags) {
-        super();
+    public Flags(final long flags) {
         this.flags = flags;
+    }
+
+    /**
+     * Turn off all flags.  This is a synonym for <code>turnOffAll()</code>.
+     * @since 1.1.1
+     */
+    public void clear() {
+        this.flags = 0;
+    }
+
+    /**
+     * Clone this Flags object.
+     *
+     * @return a copy of this object.
+     * @see Object#clone()
+     */
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (final CloneNotSupportedException e) {
+            throw new UnsupportedOperationException("Couldn't clone Flags object.", e);
+        }
+    }
+
+    /**
+     * Tests if two Flags objects are in the same state.
+     * @param obj object being tested
+     * @see Object#equals(Object)
+     *
+     * @return whether the objects are equal.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Flags)) {
+            return false;
+        }
+        final Flags other = (Flags) obj;
+        return flags == other.flags;
     }
 
     /**
@@ -74,15 +112,14 @@ public class Flags implements Serializable, Cloneable {
     }
 
     /**
-     * Tests whether the given flag is on.  If the flag is not a power of 2
-     * (ie. 3) this tests whether the combination of flags is on.
+     * The hash code is based on the current state of the flags.
+     * @see Object#hashCode()
      *
-     * @param flag Flag value to check.
-     *
-     * @return whether the specified flag value is on.
+     * @return the hash code for this object.
      */
-    public boolean isOn(long flag) {
-        return (this.flags & flag) == flag;
+    @Override
+    public int hashCode() {
+        return (int) this.flags;
     }
 
     /**
@@ -93,98 +130,20 @@ public class Flags implements Serializable, Cloneable {
      *
      * @return whether the specified flag value is off.
      */
-    public boolean isOff(long flag) {
+    public boolean isOff(final long flag) {
         return (this.flags & flag) == 0;
     }
 
     /**
-     * Turns on the given flag.  If the flag is not a power of 2 (ie. 3) this
-     * turns on multiple flags.
+     * Tests whether the given flag is on.  If the flag is not a power of 2
+     * (ie. 3) this tests whether the combination of flags is on.
      *
-     * @param flag Flag value to turn on.
-     */
-    public void turnOn(long flag) {
-        this.flags |= flag;
-    }
-
-    /**
-     * Turns off the given flag.  If the flag is not a power of 2 (ie. 3) this
-     * turns off multiple flags.
+     * @param flag Flag value to check.
      *
-     * @param flag Flag value to turn off.
+     * @return whether the specified flag value is on.
      */
-    public void turnOff(long flag) {
-        this.flags &= ~flag;
-    }
-
-    /**
-     * Turn off all flags.
-     */
-    public void turnOffAll() {
-        this.flags = 0;
-    }
-
-    /**
-     * Turn off all flags.  This is a synonym for <code>turnOffAll()</code>.
-     * @since Validator 1.1.1
-     */
-    public void clear() {
-        this.flags = 0;
-    }
-
-    /**
-     * Turn on all 64 flags.
-     */
-    public void turnOnAll() {
-        this.flags = 0xFFFFFFFFFFFFFFFFl;
-    }
-
-    /**
-     * Clone this Flags object.
-     *
-     * @return a copy of this object.
-     * @see java.lang.Object#clone()
-     */
-    @Override
-    public Object clone() {
-        try {
-            return super.clone();
-        } catch(CloneNotSupportedException e) {
-            throw new RuntimeException("Couldn't clone Flags object.");
-        }
-    }
-
-    /**
-     * Tests if two Flags objects are in the same state.
-     * @param obj object being tested
-     * @see java.lang.Object#equals(java.lang.Object)
-     *
-     * @return whether the objects are equal.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Flags)) {
-            return false;
-        }
-
-        if (obj == this) {
-            return true;
-        }
-
-        Flags f = (Flags) obj;
-
-        return this.flags == f.flags;
-    }
-
-    /**
-     * The hash code is based on the current state of the flags.
-     * @see java.lang.Object#hashCode()
-     *
-     * @return the hash code for this object.
-     */
-    @Override
-    public int hashCode() {
-        return (int) this.flags;
+    public boolean isOn(final long flag) {
+        return (this.flags & flag) == flag;
     }
 
     /**
@@ -196,11 +155,45 @@ public class Flags implements Serializable, Cloneable {
      */
     @Override
     public String toString() {
-        StringBuilder bin = new StringBuilder(Long.toBinaryString(this.flags));
+        final StringBuilder bin = new StringBuilder(Long.toBinaryString(this.flags));
         for (int i = 64 - bin.length(); i > 0; i--) { // CHECKSTYLE IGNORE MagicNumber
             bin.insert(0, "0");
         }
         return bin.toString();
+    }
+
+    /**
+     * Turns off the given flag.  If the flag is not a power of 2 (ie. 3) this
+     * turns off multiple flags.
+     *
+     * @param flag Flag value to turn off.
+     */
+    public void turnOff(final long flag) {
+        this.flags &= ~flag;
+    }
+
+    /**
+     * Turn off all flags.
+     */
+    public void turnOffAll() {
+        this.flags = 0;
+    }
+
+    /**
+     * Turns on the given flag.  If the flag is not a power of 2 (ie. 3) this
+     * turns on multiple flags.
+     *
+     * @param flag Flag value to turn on.
+     */
+    public void turnOn(final long flag) {
+        this.flags |= flag;
+    }
+
+    /**
+     * Turn on all 64 flags.
+     */
+    public void turnOnAll() {
+        this.flags = 0xFFFFFFFFFFFFFFFFL;
     }
 
 }

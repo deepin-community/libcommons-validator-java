@@ -32,12 +32,11 @@ package org.apache.commons.validator.routines.checkdigit;
  * </p>
  *
  * <p>
- * See <a href="http://en.wikipedia.org/wiki/ISIN">Wikipedia - ISIN</a>
+ * See <a href="https://en.wikipedia.org/wiki/ISIN">Wikipedia - ISIN</a>
  * for more details.
  * </p>
  *
- * @version $Revision: 1739356 $
- * @since Validator 1.4
+ * @since 1.4
  */
 public final class ISINCheckDigit extends ModulusCheckDigit {
 
@@ -48,14 +47,13 @@ public final class ISINCheckDigit extends ModulusCheckDigit {
     /** Singleton ISIN Check Digit instance */
     public static final CheckDigit ISIN_CHECK_DIGIT = new ISINCheckDigit();
 
-    /** weighting given to digits depending on their right position */
-    private static final int[] POSITION_WEIGHT = new int[] {2, 1};
+    /** Weighting given to digits depending on their right position */
+    private static final int[] POSITION_WEIGHT = {2, 1};
 
     /**
-     * Construct an ISIN Indetifier Check Digit routine.
+     * Constructs an ISIN Identifier Check Digit routine.
      */
     public ISINCheckDigit() {
-        super(10); // CHECKSTYLE IGNORE MagicNumber
     }
 
     /**
@@ -68,44 +66,43 @@ public final class ISINCheckDigit extends ModulusCheckDigit {
      * for the specified code
      */
     @Override
-    protected int calculateModulus(String code, boolean includesCheckDigit) throws CheckDigitException {
-        StringBuilder transformed = new  StringBuilder(code.length() * 2);
+    protected int calculateModulus(final String code, final boolean includesCheckDigit) throws CheckDigitException {
+        final StringBuilder transformed = new StringBuilder(code.length() * 2); // CHECKSTYLE IGNORE MagicNumber
         if (includesCheckDigit) {
-            char checkDigit = code.charAt(code.length()-1); // fetch the last character
-            if (!Character.isDigit(checkDigit)){
-                throw new CheckDigitException("Invalid checkdigit["+ checkDigit+ "] in " + code);
+            final char checkDigit = code.charAt(code.length() - 1); // fetch the last character
+            if (!Character.isDigit(checkDigit)) {
+                throw new CheckDigitException("Invalid checkdigit[" + checkDigit + "] in " + code);
             }
         }
         for (int i = 0; i < code.length(); i++) {
-            int charValue = Character.getNumericValue(code.charAt(i));
+            final int charValue = Character.getNumericValue(code.charAt(i));
             if (charValue < 0 || charValue > MAX_ALPHANUMERIC_VALUE) {
-                throw new CheckDigitException("Invalid Character[" +
-                        (i + 1) + "] = '" + charValue + "'");
+                throw new CheckDigitException("Invalid Character[" + (i + 1) + "] = '" + charValue + "'");
             }
-             // this converts alphanumerics to two digits
-             // so there is no need to overload toInt()
+            // this converts alphanumerics to two digits
+            // so there is no need to overload toInt()
             transformed.append(charValue);
         }
         return super.calculateModulus(transformed.toString(), includesCheckDigit);
     }
 
     /**
-     * <p>Calculates the <i>weighted</i> value of a charcter in the
+     * <p>Calculates the <i>weighted</i> value of a character in the
      * code at a specified position.</p>
      *
-     * <p>For Luhn (from right to left) <b>odd</b> digits are weighted
+     * <p>For ISIN (from right to left) <b>odd</b> digits are weighted
      * with a factor of <b>one</b> and <b>even</b> digits with a factor
-     * of <b>two</b>. Weighted values &gt; 9, have 9 subtracted</p>
+     * of <b>two</b>. Weighted values are reduced to their digital root</p>
      *
      * @param charValue The numeric value of the character.
-     * @param leftPos The position of the character in the code, counting from left to right
-     * @param rightPos The positionof the character in the code, counting from right to left
+     * @param leftPos  The position of the character in the code, counting from left to right
+     * @param rightPos The position of the character in the code, counting from right to left
      * @return The weighted value of the character.
      */
     @Override
-    protected int weightedValue(int charValue, int leftPos, int rightPos) {
-        int weight = POSITION_WEIGHT[rightPos % 2];
-        int weightedValue = (charValue * weight);
-        return ModulusCheckDigit.sumDigits(weightedValue);
+    protected int weightedValue(final int charValue, final int leftPos, final int rightPos) {
+        final int weight = POSITION_WEIGHT[rightPos % 2]; // CHECKSTYLE IGNORE MagicNumber
+        final int weightedValue = charValue * weight;
+        return sumDigits(weightedValue);
     }
 }

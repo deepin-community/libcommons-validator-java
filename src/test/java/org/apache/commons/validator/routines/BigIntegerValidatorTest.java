@@ -16,52 +16,51 @@
  */
 package org.apache.commons.validator.routines;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.math.BigInteger;
 import java.util.Locale;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 /**
  * Test Case for BigIntegerValidator.
- * 
- * @version $Revision: 1739356 $
  */
 public class BigIntegerValidatorTest extends AbstractNumberValidatorTest {
 
-    /**
-     * Constructor
-     * @param name test name
-     */
-    public BigIntegerValidatorTest(String name) {
-        super(name);
-    }
-
     @Override
-    protected void setUp() throws Exception {
+    @BeforeEach
+    protected void setUp() {
         super.setUp();
 
-        validator       = new BigIntegerValidator(false, 0);
+        validator = new BigIntegerValidator(false, 0);
         strictValidator = new BigIntegerValidator();
 
         testPattern = "#,###";
 
         // testValidateMinMax()
-        max =  null;
+        max = null;
         maxPlusOne = null;
         min = null;
         minMinusOne = null;
 
         // testInvalidStrict()
-        invalidStrict = new String[] {null, "", "X", "X12", "12X", "1X2", "1.2"};
+        invalidStrict = new String[] { null, "", "X", "X12", "12X", "1X2", "1.2" };
 
         // testInvalidNotStrict()
-        invalid       = new String[] {null, "", "X", "X12"};
+        invalid = new String[] { null, "", "X", "X12" };
 
         // testValid()
-        testNumber    = new BigInteger("1234");
-        testZero      = new BigInteger("0");
-        validStrict          = new String[] {"0", "1234", "1,234"};
-        validStrictCompare   = new Number[] {testZero, testNumber, testNumber};
-        valid                = new String[] {"0", "1234", "1,234", "1,234.5", "1234X"};
-        validCompare         = new Number[] {testZero, testNumber, testNumber, testNumber, testNumber};
+        testNumber = new BigInteger("1234");
+        testZero = new BigInteger("0");
+        validStrict = new String[] { "0", "1234", "1,234" };
+        validStrictCompare = new Number[] { testZero, testNumber, testNumber };
+        valid = new String[] { "0", "1234", "1,234", "1,234.5", "1234X" };
+        validCompare = new Number[] { testZero, testNumber, testNumber, testNumber, testNumber };
 
         testStringUS = "1,234";
         testStringDE = "1.234";
@@ -69,71 +68,73 @@ public class BigIntegerValidatorTest extends AbstractNumberValidatorTest {
         // Localized Pattern test
         localeValue = testStringDE;
         localePattern = "#.###";
-        testLocale    = Locale.GERMANY;
+        testLocale = Locale.GERMANY;
         localeExpected = testNumber;
 
     }
 
     /**
-     * Test BigIntegerValidator validate Methods
+     * Test BigInteger Range/Min/Max
      */
-    public void testBigIntegerValidatorMethods() {
-        Locale locale     = Locale.GERMAN;
-        String pattern    = "0,00,00";
-        String patternVal = "1,23,45";
-        String germanPatternVal = "1.23.45";
-        String localeVal  = "12.345";
-        String defaultVal = "12,345";
-        String XXXX    = "XXXX"; 
-        BigInteger expected = new BigInteger("12345");
-        assertEquals("validate(A) default", expected, BigIntegerValidator.getInstance().validate(defaultVal));
-        assertEquals("validate(A) locale ", expected, BigIntegerValidator.getInstance().validate(localeVal, locale));
-        assertEquals("validate(A) pattern", expected, BigIntegerValidator.getInstance().validate(patternVal, pattern));
-        assertEquals("validate(A) both",    expected, BigIntegerValidator.getInstance().validate(germanPatternVal, pattern, Locale.GERMAN));
+    @Test
+    public void testBigIntegerRangeMinMax() {
+        final BigIntegerValidator validator = (BigIntegerValidator) strictValidator;
+        final BigInteger number9 = validator.validate("9", "#");
+        final BigInteger number10 = validator.validate("10", "#");
+        final BigInteger number11 = validator.validate("11", "#");
+        final BigInteger number19 = validator.validate("19", "#");
+        final BigInteger number20 = validator.validate("20", "#");
+        final BigInteger number21 = validator.validate("21", "#");
 
-        assertTrue("isValid(A) default", BigIntegerValidator.getInstance().isValid(defaultVal));
-        assertTrue("isValid(A) locale ", BigIntegerValidator.getInstance().isValid(localeVal, locale));
-        assertTrue("isValid(A) pattern", BigIntegerValidator.getInstance().isValid(patternVal, pattern));
-        assertTrue("isValid(A) both",    BigIntegerValidator.getInstance().isValid(germanPatternVal, pattern, Locale.GERMAN));
+        // Test isInRange()
+        assertFalse(validator.isInRange(number9, 10, 20), "isInRange() < min");
+        assertTrue(validator.isInRange(number10, 10, 20), "isInRange() = min");
+        assertTrue(validator.isInRange(number11, 10, 20), "isInRange() in range");
+        assertTrue(validator.isInRange(number20, 10, 20), "isInRange() = max");
+        assertFalse(validator.isInRange(number21, 10, 20), "isInRange() > max");
 
-        assertNull("validate(B) default", BigIntegerValidator.getInstance().validate(XXXX));
-        assertNull("validate(B) locale ", BigIntegerValidator.getInstance().validate(XXXX, locale));
-        assertNull("validate(B) pattern", BigIntegerValidator.getInstance().validate(XXXX, pattern));
-        assertNull("validate(B) both",    BigIntegerValidator.getInstance().validate(patternVal, pattern, Locale.GERMAN));
+        // Test minValue()
+        assertFalse(validator.minValue(number9, 10), "minValue() < min");
+        assertTrue(validator.minValue(number10, 10), "minValue() = min");
+        assertTrue(validator.minValue(number11, 10), "minValue() > min");
 
-        assertFalse("isValid(B) default", BigIntegerValidator.getInstance().isValid(XXXX));
-        assertFalse("isValid(B) locale ", BigIntegerValidator.getInstance().isValid(XXXX, locale));
-        assertFalse("isValid(B) pattern", BigIntegerValidator.getInstance().isValid(XXXX, pattern));
-        assertFalse("isValid(B) both",    BigIntegerValidator.getInstance().isValid(patternVal, pattern, Locale.GERMAN));
+        // Test minValue()
+        assertTrue(validator.maxValue(number19, 20), "maxValue() < max");
+        assertTrue(validator.maxValue(number20, 20), "maxValue() = max");
+        assertFalse(validator.maxValue(number21, 20), "maxValue() > max");
     }
 
     /**
-     * Test BigInteger Range/Min/Max
+     * Test BigIntegerValidator validate Methods
      */
-    public void testBigIntegerRangeMinMax() {
-        BigIntegerValidator validator = (BigIntegerValidator)strictValidator;
-        BigInteger number9  = validator.validate("9", "#");
-        BigInteger number10 = validator.validate("10", "#");
-        BigInteger number11 = validator.validate("11", "#");
-        BigInteger number19 = validator.validate("19", "#");
-        BigInteger number20 = validator.validate("20", "#");
-        BigInteger number21 = validator.validate("21", "#");
+    @Test
+    public void testBigIntegerValidatorMethods() {
+        final Locale locale = Locale.GERMAN;
+        final String pattern = "0,00,00";
+        final String patternVal = "1,23,45";
+        final String germanPatternVal = "1.23.45";
+        final String localeVal = "12.345";
+        final String defaultVal = "12,345";
+        final String xxxx = "XXXX";
+        final BigInteger expected = new BigInteger("12345");
+        assertEquals(expected, BigIntegerValidator.getInstance().validate(defaultVal), "validate(A) default");
+        assertEquals(expected, BigIntegerValidator.getInstance().validate(localeVal, locale), "validate(A) locale ");
+        assertEquals(expected, BigIntegerValidator.getInstance().validate(patternVal, pattern), "validate(A) pattern");
+        assertEquals(expected, BigIntegerValidator.getInstance().validate(germanPatternVal, pattern, Locale.GERMAN), "validate(A) both");
 
-        // Test isInRange()
-        assertFalse("isInRange() < min",   validator.isInRange(number9,  10, 20));
-        assertTrue("isInRange() = min",    validator.isInRange(number10, 10, 20));
-        assertTrue("isInRange() in range", validator.isInRange(number11, 10, 20));
-        assertTrue("isInRange() = max",    validator.isInRange(number20, 10, 20));
-        assertFalse("isInRange() > max",   validator.isInRange(number21, 10, 20));
+        assertTrue(BigIntegerValidator.getInstance().isValid(defaultVal), "isValid(A) default");
+        assertTrue(BigIntegerValidator.getInstance().isValid(localeVal, locale), "isValid(A) locale ");
+        assertTrue(BigIntegerValidator.getInstance().isValid(patternVal, pattern), "isValid(A) pattern");
+        assertTrue(BigIntegerValidator.getInstance().isValid(germanPatternVal, pattern, Locale.GERMAN), "isValid(A) both");
 
-        // Test minValue()
-        assertFalse("minValue() < min",    validator.minValue(number9,  10));
-        assertTrue("minValue() = min",     validator.minValue(number10, 10));
-        assertTrue("minValue() > min",     validator.minValue(number11, 10));
+        assertNull(BigIntegerValidator.getInstance().validate(xxxx), "validate(B) default");
+        assertNull(BigIntegerValidator.getInstance().validate(xxxx, locale), "validate(B) locale ");
+        assertNull(BigIntegerValidator.getInstance().validate(xxxx, pattern), "validate(B) pattern");
+        assertNull(BigIntegerValidator.getInstance().validate(patternVal, pattern, Locale.GERMAN), "validate(B) both");
 
-        // Test minValue()
-        assertTrue("maxValue() < max",     validator.maxValue(number19, 20));
-        assertTrue("maxValue() = max",     validator.maxValue(number20, 20));
-        assertFalse("maxValue() > max",    validator.maxValue(number21, 20));
+        assertFalse(BigIntegerValidator.getInstance().isValid(xxxx), "isValid(B) default");
+        assertFalse(BigIntegerValidator.getInstance().isValid(xxxx, locale), "isValid(B) locale ");
+        assertFalse(BigIntegerValidator.getInstance().isValid(xxxx, pattern), "isValid(B) pattern");
+        assertFalse(BigIntegerValidator.getInstance().isValid(patternVal, pattern, Locale.GERMAN), "isValid(B) both");
     }
 }

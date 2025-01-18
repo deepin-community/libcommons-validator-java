@@ -1,10 +1,7 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --buildsystem=maven --with javahelper
+	dh $@ --with javahelper
 
 override_dh_installchangelogs:
 	dh_installchangelogs RELEASE-NOTES.txt
-
-get-orig-source:
-	uscan --download-current-version --force-download --no-symlink

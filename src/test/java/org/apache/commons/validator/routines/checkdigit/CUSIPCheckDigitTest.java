@@ -16,60 +16,42 @@
  */
 package org.apache.commons.validator.routines.checkdigit;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * CUSIP Check Digit Test.
- *
- * @version $Revision: 1739356 $
- * @since Validator 1.4
  */
 public class CUSIPCheckDigitTest extends AbstractCheckDigitTest {
 
-    /**
-     * Construct a new test.
-     * @param name test name
-     */
-    public CUSIPCheckDigitTest(String name) {
-        super(name);
-    }
+    private static final String[] INVALID_CHECK_DIGITS = { "DUS0421CW", "DUS0421CN", "DUS0421CE" };
+
+    private static final String[] VALID_CHECK_DIGITS = { "DUS0421C5" };
 
     /**
-     * Set up routine & valid codes.
+     * Sets up routine & valid codes.
      */
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @BeforeEach
+    protected void setUp() {
         routine = CUSIPCheckDigit.CUSIP_CHECK_DIGIT;
-        valid = new String[] {"037833100",
-                              "931142103",
-                              "837649128",
-                              "392690QT3",
-                              "594918104",
-                              "86770G101",
-                              "Y8295N109",
-                              "G8572F100"
-                              };
-        invalid = new String[] {"0378#3100"};
+        valid = new String[] { "037833100", "931142103", "837649128", "392690QT3", "594918104", "86770G101", "Y8295N109", "G8572F100" };
+        invalid = new String[] { "0378#3100" };
     }
 
-    private static String invalidCheckDigits[] = {"DUS0421CW",
-                                                  "DUS0421CN",
-                                                  "DUS0421CE"
-    };
-
-    public void testVALIDATOR_336_InvalidCheckDigits() {
-        for (int i = 0; i < invalidCheckDigits.length; i++) {
-            String invalidCheckDigit = invalidCheckDigits[i];
-            assertFalse("Should fail: " + invalidCheckDigit, routine.isValid(invalidCheckDigit));
+    @Test
+    public void testValidator336InvalidCheckDigits() {
+        for (final String invalidCheckDigit : INVALID_CHECK_DIGITS) {
+            assertFalse(routine.isValid(invalidCheckDigit), () -> "Should fail: " + invalidCheckDigit);
         }
     }
 
-    private static String validCheckDigits[] = {"DUS0421C5"};
-
-    public void testVALIDATOR_336_ValidCheckDigits() {
-        for (int i = 0; i < validCheckDigits.length; i++) {
-            String validCheckDigit = validCheckDigits[i];
-            assertTrue("Should fail: " + validCheckDigit, routine.isValid(validCheckDigit));
+    @Test
+    public void testValidator336ValidCheckDigits() {
+        for (final String validCheckDigit : VALID_CHECK_DIGITS) {
+            assertTrue(routine.isValid(validCheckDigit), () -> "Should fail: " + validCheckDigit);
         }
     }
 }

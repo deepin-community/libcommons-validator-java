@@ -16,27 +16,25 @@
  */
 package org.apache.commons.validator;
 
-/**                                                       
- * Value object for storing a value to run tests on. 
- *
- * @version $Revision: 1649191 $
+/**
+ * Value object for storing a value to run tests on.
  */
 public class ValueBean {
-   
-   protected String value = null;
-   
-   /**
-    * Gets the value.
-    */
-   public String getValue() {
-      return value;
-   }
 
-   /**
-    * Sets the value.
-    */
-   public void setValue(String value) {
-      this.value = value;
-   }
-      
-}                                                         
+    protected String value;
+
+    /**
+     * Gets the value.
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value.
+     */
+    public void setValue(final String value) {
+        this.value = value;
+    }
+
+}
